@@ -3,7 +3,6 @@ package com.example.online_shop_back.entity;
 import com.example.online_shop_back.entity.template.AbsEntity;
 import com.example.online_shop_back.utils.ColumnName;
 import com.example.online_shop_back.utils.EntityName;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +13,7 @@ import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,7 +44,6 @@ public class User extends AbsEntity implements UserDetails {
     private String email;
 
     @ManyToOne
-    @Column(name = "address_id")
     private Address address;
 
     @Column(name = ColumnName.ACCOUNT_NON_EXPIRED)
@@ -73,6 +72,15 @@ public class User extends AbsEntity implements UserDetails {
     @Override
     public String getUsername() {
         return this.phoneNumber;
+    }
+
+    public User(String firstName, String lastName, String phoneNumber, String password, Set<Role> roles){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.password = password;
+        this.roles = roles;
+
     }
 
 }

@@ -40,4 +40,6 @@ public interface EntityName {
     String RATE="rates";
 
     String CRITERIA="criterias";
+
+    String WISHLIST="wish_list";
 }

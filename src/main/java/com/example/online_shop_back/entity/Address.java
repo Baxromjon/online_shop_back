@@ -36,7 +36,6 @@ public class Address extends AbsEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "region_id")
     @ManyToOne
     private Region region;
 }

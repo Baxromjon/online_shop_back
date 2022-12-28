@@ -2,9 +2,6 @@ package com.example.online_shop_back.entity;
 
 import com.example.online_shop_back.entity.template.AbsEntity;
 import com.example.online_shop_back.utils.EntityName;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +9,10 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 
 @Data
@@ -24,18 +25,15 @@ import org.hibernate.annotations.Where;
 @Where(clause = "deleted=false")
 public class OutputProduct extends AbsEntity {
 
-    @Column(name = "output_trade_id")
     @ManyToOne
     private OutputTrade outputTrade;
 
     @Column(name = "price")
     private double price;
 
-    @Column(name = "monthly_price_id")
     @ManyToOne
     private MonthlyPrice monthlyPrice;
 
-    @Column(name = "pay_type_id")
     @ManyToOne
     private PayType payType;
 

@@ -4,7 +4,6 @@ import com.example.online_shop_back.entity.template.AbsEntity;
 import com.example.online_shop_back.enums.OrderStatus;
 import com.example.online_shop_back.utils.ColumnName;
 import com.example.online_shop_back.utils.EntityName;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.util.List;
+import javax.persistence.*;
 
 
 @Data
@@ -36,9 +35,6 @@ public class Order extends AbsEntity {
     @Column(name = "total_discount_price")
     private double totalDiscountPrice;
 
-    @ManyToMany
-    @JoinTable(name = "order_output_trade",
-            joinColumns = {@JoinColumn(name = "order_id")},
-            inverseJoinColumns = {@JoinColumn(name = "output_trade_id")})
-    private List<OutputTrade> outputTrade;
+    @OneToOne
+    private OutputTrade outputTrade;
 }

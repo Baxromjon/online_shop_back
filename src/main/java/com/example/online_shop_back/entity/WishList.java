@@ -12,18 +12,21 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-
+import javax.persistence.ManyToOne;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Entity(name = EntityName.MEASUREMENT)
-@SQLDelete(sql = "UPDATE " + EntityName.MEASUREMENT + " SET deleted = TRUE WHERE id=?")
+@Entity(name = EntityName.WISHLIST)
+@SQLDelete(sql = "UPDATE " + EntityName.WISHLIST + " SET deleted = TRUE WHERE id=?")
 @Where(clause = "deleted=false")
-public class Measurement extends AbsEntity {
+public class WishList extends AbsEntity {
 
-    @Column(name = "name")
-    private String name;
+    @ManyToOne
+    private User user;
+
+    @ManyToOne
+    private Product product;
 }
