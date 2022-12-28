@@ -44,8 +44,9 @@ public class AuthController {
 
     @PostMapping("/register")
     HttpEntity<?> register(@Valid @RequestBody RegisterDTO registerDTO) {
-        UserDetails userDetails = authServiceImpl.loadUserByUsername(registerDTO.getPhoneNumber());
-        return ResponseEntity.ok(userDetails);
+        ApiResult register = authService.register(registerDTO);
+        return ResponseEntity.status(register.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(register);
+
     }
 
     @PostMapping("/login")

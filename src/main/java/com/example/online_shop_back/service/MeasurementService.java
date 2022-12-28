@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class MeasurementService {
@@ -22,5 +23,17 @@ public class MeasurementService {
         Measurement measurement = new Measurement(measurementDTO.getName());
         measurementRepository.save(measurement);
         return new ApiResult<>(true, "Successfully added");
+    }
+
+    public ApiResult edit(UUID id, MeasurementDTO measurementDTO) {
+        Optional<Measurement> byId = measurementRepository.findById(id);
+        if (!byId.isPresent()) {
+            return new ApiResult(false, "Measurement not found");
+        }
+        Measurement measurement = byId.get();
+        measurement.setName(measurementDTO.getName());
+        measurementRepository.save(measurement);
+        return new ApiResult(true, "Successfully edited");
+
     }
 }

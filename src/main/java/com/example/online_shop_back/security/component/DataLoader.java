@@ -9,7 +9,6 @@ import com.example.online_shop_back.repository.RoleRepository;
 import com.example.online_shop_back.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.boot.jaxb.mapping.spi.CollectionAttribute;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -56,7 +55,7 @@ public class DataLoader implements CommandLineRunner {
                     "Admin",
                     "+998990068005",
                     passwordEncoder.encode("root123"),
-                    Collections.singleton(roleRepository.findByName(RoleNameEnum.ROLE_ADMIN))
+                    roleRepository.findByName(RoleNameEnum.ROLE_ADMIN)
             );
             userRepository.save(user);
         }

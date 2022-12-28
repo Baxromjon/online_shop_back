@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -43,8 +44,11 @@ public class User extends AbsEntity implements UserDetails {
     @Column(name = ColumnName.EMAIL)
     private String email;
 
-    @ManyToOne
-    private Address address;
+    @ManyToMany
+    @JoinTable(name = "user_addresses",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "address_id")})
+    private List<Address> addresses;
 
     @Column(name = ColumnName.ACCOUNT_NON_EXPIRED)
     private boolean accountNonExpired = true;
