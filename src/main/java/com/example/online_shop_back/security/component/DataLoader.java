@@ -36,7 +36,7 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Value(value = "${spring.sql.init.mode}")
+    @Value(value = "${spring.jpa.hibernate.ddl-auto}")
     private String initialMode;
 
     @Override

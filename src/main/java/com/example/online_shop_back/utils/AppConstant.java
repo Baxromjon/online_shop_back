@@ -23,6 +23,8 @@ public interface AppConstant {
     String[] OPEN_PAGES_FOR_ALL_METHOD = {
             "/api/auth/actuator/refresh",
             "/actuator/refresh",
+            "/api/auth/login",
+            "/api/auth/**",
     };
 
 }

@@ -1,5 +1,8 @@
 package com.example.online_shop_back.service;
 
+import com.example.online_shop_back.payload.ApiResult;
+import com.example.online_shop_back.payload.RegisterDTO;
+import com.example.online_shop_back.repository.AuthService;
 import com.example.online_shop_back.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

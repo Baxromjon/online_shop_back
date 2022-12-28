@@ -7,6 +7,7 @@ import com.example.online_shop_back.utils.AppConstant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -55,16 +56,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .exceptionHandling()
-                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(AppConstant.OPEN_PAGES_FOR_ALL_METHOD)
+                .antMatchers(
+                        "/api/auth/**"
+                )
                 .permitAll()
-                .anyRequest()
-                .authenticated();
+                .antMatchers(HttpMethod.POST, "/api/auth/login")
+                .permitAll()
+                .antMatchers("/api/**")
+                .permitAll();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

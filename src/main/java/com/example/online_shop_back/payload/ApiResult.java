@@ -39,6 +39,11 @@ public class ApiResult<T> {
         this.message = message;
     }
 
+    public ApiResult(Boolean success, String message) {
+        this.success = success;
+        this.message = message;
+    }
+
     public ApiResult(String message) {
         this.message = message;
         this.success = Boolean.TRUE;
