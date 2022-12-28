@@ -1,5 +1,6 @@
 package com.example.online_shop_back.config;
 
+import com.example.online_shop_back.security.JwtAuthenticationFilter;
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

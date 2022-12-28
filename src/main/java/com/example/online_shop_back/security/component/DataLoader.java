@@ -38,58 +38,65 @@ public class DataLoader implements CommandLineRunner {
 
     @Value(value = "${spring.sql.init.mode}")
     private String initialMode;
+
     @Override
     public void run(String... strings) {
-//        if (initialMode.equals("always")){
+        if (roleRepository.findAll().size() == 0) {
 
-//            Role adminRole=new Role(RoleNameEnum.ROLE_ADMIN);
-//            Role userRole=new Role(RoleNameEnum.ROLE_USER);
-//            List<Role> roles=new ArrayList<>();
-//            roles.add(adminRole);
-//            roles.add(userRole);
-//            roleRepository.saveAll(roles);
+            Role adminRole = new Role(RoleNameEnum.ROLE_ADMIN);
+            Role userRole = new Role(RoleNameEnum.ROLE_USER);
+            List<Role> roles = new ArrayList<>();
+            roles.add(adminRole);
+            roles.add(userRole);
+            roleRepository.saveAll(roles);
+        }
+        if (userRepository.findAll().size() == 0) {
+            User user = new User(
+                    "Admin",
+                    "Admin",
+                    "+998990068005",
+                    passwordEncoder.encode("root123"),
+                    Collections.singleton(roleRepository.findByName(RoleNameEnum.ROLE_ADMIN))
+            );
+            userRepository.save(user);
+        }
 
-//            User user = new User(
-//                    "Admin",
-//                    "Admin",
-//                    "+998990068005",
-//                    passwordEncoder.encode("root123"),
-//                    Collections.singleton(roleRepository.findByName(RoleNameEnum.ROLE_ADMIN))
-//            );
-//            userRepository.save(user);
 
-//            List<Region> regions = new ArrayList<>();
-//            Region andijon = new Region("Andijon");
-//            Region fargona = new Region("Farg`ona");
-//            Region namangan = new Region("Namangan");
-//            Region toshkent = new Region("Toshkent");
-//            Region toshkent_shaxri = new Region("Toshkent shahri");
-//            Region sirdaryo = new Region("Sirdaryo");
-//            Region samarqand = new Region("Samarqand");
-//            Region jizzax = new Region("Jizzax");
-//            Region qashqadaryo = new Region("Qashqadaryo");
-//            Region surxondaryo = new Region("Surxondaryo");
-//            Region buxoro = new Region("Buxoro");
-//            Region navoiy = new Region("Navoiy");
-//            Region xorazm = new Region("Xorazm");
-//            Region qoraqalpoq = new Region("Qoraqalpog`iston Respublikasi");
-//            regions.add(andijon);
-//            regions.add(fargona);
-//            regions.add(namangan);
-//            regions.add(toshkent);
-//            regions.add(toshkent_shaxri);
-//            regions.add(sirdaryo);
-//            regions.add(samarqand);
-//            regions.add(jizzax);
-//            regions.add(qashqadaryo);
-//            regions.add(surxondaryo);
-//            regions.add(buxoro);
-//            regions.add(navoiy);
-//            regions.add(xorazm);
-//            regions.add(qoraqalpoq);
-//            regionRepository.saveAll(regions);
-//
-//        }
+        if (regionRepository.findAll().size() == 0) {
+            List<Region> regions = new ArrayList<>();
+            Region andijon = new Region("Andijon");
+            Region fargona = new Region("Farg`ona");
+            Region namangan = new Region("Namangan");
+            Region toshkent = new Region("Toshkent");
+            Region toshkent_shaxri = new Region("Toshkent shahri");
+            Region sirdaryo = new Region("Sirdaryo");
+            Region samarqand = new Region("Samarqand");
+            Region jizzax = new Region("Jizzax");
+            Region qashqadaryo = new Region("Qashqadaryo");
+            Region surxondaryo = new Region("Surxondaryo");
+            Region buxoro = new Region("Buxoro");
+            Region navoiy = new Region("Navoiy");
+            Region xorazm = new Region("Xorazm");
+            Region qoraqalpoq = new Region("Qoraqalpog`iston Respublikasi");
+            regions.add(andijon);
+            regions.add(fargona);
+            regions.add(namangan);
+            regions.add(toshkent);
+            regions.add(toshkent_shaxri);
+            regions.add(sirdaryo);
+            regions.add(samarqand);
+            regions.add(jizzax);
+            regions.add(qashqadaryo);
+            regions.add(surxondaryo);
+            regions.add(buxoro);
+            regions.add(navoiy);
+            regions.add(xorazm);
+            regions.add(qoraqalpoq);
+            regionRepository.saveAll(regions);
+        }
+
+
+    }
 
 //        if (roleRepository.findAll().size()==0){
 //            List<Role> roles=new ArrayList<>();
@@ -107,7 +114,7 @@ public class DataLoader implements CommandLineRunner {
 //            roles.add(new Role(nameEnum));
 //            roleRepository.saveAll(roles);
 //        }
-
+//
 //        int size = userRepository.findAll().size();
 //
 //        if (size == 0) {
@@ -120,7 +127,7 @@ public class DataLoader implements CommandLineRunner {
 //
 //        }
 
-    }
-
-
 }
+
+
+

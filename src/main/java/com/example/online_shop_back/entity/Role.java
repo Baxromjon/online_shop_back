@@ -21,8 +21,8 @@ import javax.persistence.*;
 @DynamicInsert
 @DynamicUpdate
 @Entity(name = EntityName.ROLE)
-@SQLDelete(sql = "UPDATE " + EntityName.ROLE + " SET deleted = TRUE WHERE id=?")
-@Where(clause = "deleted=false")
+//@SQLDelete(sql = "UPDATE " + EntityName.ROLE + " SET deleted = TRUE WHERE id=?")
+//@Where(clause = "deleted=false")
 public class Role implements GrantedAuthority {
 
     @Id
