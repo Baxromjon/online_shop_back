@@ -14,10 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -35,11 +32,14 @@ public class User extends AbsEntity implements UserDetails {
     @Column(name = ColumnName.LAST_NAME)
     private String lastName;
 
-    @Column(nullable = false, name = ColumnName.PHONE_NUMBER)
+    @Column(name = ColumnName.PHONE_NUMBER)
     private String phoneNumber;
 
     @Column(name = ColumnName.PASSWORD)
     private String password;
+
+    @Column(name = "birth_date")
+    private Date birthDate;
 
     @Column(name = ColumnName.EMAIL)
     private String email;
