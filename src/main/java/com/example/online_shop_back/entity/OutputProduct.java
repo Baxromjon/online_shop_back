@@ -1,6 +1,7 @@
 package com.example.online_shop_back.entity;
 
 import com.example.online_shop_back.entity.template.AbsEntity;
+import com.example.online_shop_back.utils.ColumnName;
 import com.example.online_shop_back.utils.EntityName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,9 +11,9 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -24,15 +25,18 @@ import javax.persistence.ManyToOne;
 @SQLDelete(sql = "UPDATE " + EntityName.OUTPUT_PRODUCT + " SET deleted = TRUE WHERE id=?")
 @Where(clause = "deleted=false")
 public class OutputProduct extends AbsEntity {
-
-    @ManyToOne
-    private OutputTrade outputTrade;
+//
+//    @ManyToOne
+//    private OutputTrade outputTrade;
 
     @Column(name = "price")
-    private double price;
+    private double totalPrice;
 
-    @ManyToOne
-    private MonthlyPrice monthlyPrice;
+//    @ManyToMany
+//    @JoinTable(name = "product_monthly_price",
+//            joinColumns = {@JoinColumn(name = "product_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "monthly_price_id")})
+//    private List<MonthlyPrice> monthlyPrices;
 
     @ManyToOne
     private PayType payType;
@@ -42,5 +46,11 @@ public class OutputProduct extends AbsEntity {
 
     @Column(name = "description")
     private String description;
+
+    @ManyToOne
+    private User user;
+
+    @Column(name = "date")
+    private Date date;
 
 }

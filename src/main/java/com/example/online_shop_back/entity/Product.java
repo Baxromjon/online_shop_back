@@ -44,9 +44,12 @@ public class Product extends AbsEntity {
 
     @ManyToOne
     private Attachment attachment;
-
-    @ManyToOne
-    private MonthlyPrice monthlyPrice;
+//
+//    @ManyToMany
+//    @JoinTable(name = "product_monthly_price",
+//            joinColumns = {@JoinColumn(name = "product_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "monthly_price_id")})
+//    private List<MonthlyPrice> monthlyPrice;
 
     @Column(name = "warranty_month")
     private int warrantyMonth;

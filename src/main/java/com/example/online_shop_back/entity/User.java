@@ -32,7 +32,7 @@ public class User extends AbsEntity implements UserDetails {
     @Column(name = ColumnName.LAST_NAME)
     private String lastName;
 
-    @Column(name = ColumnName.PHONE_NUMBER)
+    @Column(nullable = false, name = ColumnName.PHONE_NUMBER)
     private String phoneNumber;
 
     @Column(name = ColumnName.PASSWORD)
@@ -44,11 +44,8 @@ public class User extends AbsEntity implements UserDetails {
     @Column(name = ColumnName.EMAIL)
     private String email;
 
-    @ManyToMany
-    @JoinTable(name = "user_addresses",
-            joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "address_id")})
-    private List<Address> addresses;
+    @ManyToOne
+    private Address address;
 
     @Column(name = ColumnName.ACCOUNT_NON_EXPIRED)
     private boolean accountNonExpired = true;

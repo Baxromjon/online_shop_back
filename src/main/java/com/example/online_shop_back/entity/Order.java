@@ -36,5 +36,10 @@ public class Order extends AbsEntity {
     private double totalDiscountPrice;
 
     @OneToOne
-    private OutputTrade outputTrade;
+    private OutputProduct outputProduct;
+
+    @ManyToOne
+    private Payment payment;
+
+    private String description;
 }

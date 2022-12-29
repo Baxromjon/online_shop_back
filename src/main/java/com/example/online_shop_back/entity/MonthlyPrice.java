@@ -10,8 +10,8 @@ import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -23,8 +23,17 @@ import javax.persistence.Entity;
 @Where(clause = "deleted=false")
 public class MonthlyPrice extends AbsEntity {
 
-    @Column(name = "month")
-    private String month;
+//    @ManyToMany
+//    @JoinTable(name = "product_monthly_price",
+//            joinColumns = {@JoinColumn(name = "product_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "monthly_price_id")})
+//    private List<Product> product;
+
+    @ManyToOne
+    private Product product;
+
+    @ManyToOne
+    private Month month;
 
     @Column(name = "price")
     private Double price;
