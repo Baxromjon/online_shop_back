@@ -17,20 +17,20 @@ import java.util.UUID;
 public class RegisterDTO {
     private UUID id;
 
-    @NotBlank
-    private String firstName;
-
-    @NotBlank
-    private String lastName;
+////    @NotBlank
+//    private String firstName;
+//
+////    @NotBlank
+//    private String lastName;
 
     @Pattern(regexp = "\\(?\\+[0-9]{1,3}\\)? ?-?[0-9]{1,3} ?-?[0-9]{3,5} ?-?[0-9]{5}( ?-?[0-9]{3})? ?(\\w{1,10}\\s?\\d{1,6})?")
     private String phoneNumber;
 
-    @NotBlank
-    @Size(min = 6, max = 12)
-    private String password;
-
-    @NotBlank
-    @Size(min = 6, max = 12)
-    private String prePassword;
+//    @NotBlank
+//    @Size(min = 6, max = 12)
+//    private String password;
+//
+//    @NotBlank
+//    @Size(min = 6, max = 12)
+//    private String prePassword;
 }
