@@ -37,13 +37,13 @@ public class Product extends AbsEntity {
     private double price;
 
     @Column(name = "discount_percent")
-    private int discountPercent;
+    private double discountPercent;
 
     @Column(name = "description")
     private String description;
-
-    @ManyToOne
-    private Attachment attachment;
+//
+//    @ManyToOne
+//    private Attachment attachment;
 //
 //    @ManyToMany
 //    @JoinTable(name = "product_monthly_price",
@@ -56,6 +56,8 @@ public class Product extends AbsEntity {
 
     @ManyToOne
     private Detail detail;
+
+    private boolean active;
 
     @ManyToMany
     @JoinTable(name = "product_photo",
