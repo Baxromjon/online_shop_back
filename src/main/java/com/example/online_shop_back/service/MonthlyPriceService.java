@@ -36,9 +36,9 @@ public class MonthlyPriceService {
                 return new ApiResult(false, "This product not found");
             }
             MonthlyPrice monthlyPrice = new MonthlyPrice();
-            monthlyPrice.setPrice(monthDTO.getPrice());
             monthlyPrice.setMonth(optional.get());
             monthlyPrice.setProduct(optionalProduct.get());
+            monthlyPrice.setPrice(monthDTO.getPrice());
             monthlyPriceRepository.save(monthlyPrice);
 
             return new ApiResult(true, "Successfully added");

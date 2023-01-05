@@ -2,11 +2,13 @@ package com.example.online_shop_back.service;
 
 import com.example.online_shop_back.entity.*;
 import com.example.online_shop_back.payload.ApiResult;
+import com.example.online_shop_back.payload.MonthlyPriceDTO;
 import com.example.online_shop_back.payload.ProductDTO;
 import com.example.online_shop_back.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -35,7 +37,7 @@ public class ProductService {
         Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
         Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
         Attachment attachment = attachmentRepository.findById(productDTO.getPhotoId()).orElseGet(Attachment::new);
-        Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
+//        Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
         Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
         try {
             if (!categoryOptional.isPresent()) {
@@ -44,9 +46,9 @@ public class ProductService {
             if (!measurementOptional.isPresent()) {
                 return new ApiResult(false, "measurement not found");
             }
-            if (!monthlyPriceOptional.isPresent()) {
-                return new ApiResult(false, "Monthly price not found");
-            }
+//            if (!monthlyPriceOptional.isPresent()) {
+//                return new ApiResult(false, "Monthly price not found");
+//            }
             if (!detailOptional.isPresent()) {
                 return new ApiResult<>(false, "Detail not found");
             }
@@ -81,7 +83,7 @@ public class ProductService {
             Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
             Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
             Attachment attachment = attachmentRepository.findById(productDTO.getPhotoId()).orElseGet(Attachment::new);
-            Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
+//            Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
             Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
             if (!categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category not found");
@@ -89,9 +91,9 @@ public class ProductService {
             if (!measurementOptional.isPresent()) {
                 return new ApiResult(false, "measurement not found");
             }
-            if (!monthlyPriceOptional.isPresent()) {
-                return new ApiResult(false, "Monthly price not found");
-            }
+//            if (!monthlyPriceOptional.isPresent()) {
+//                return new ApiResult(false, "Monthly price not found");
+//            }
             if (!detailOptional.isPresent()) {
                 return new ApiResult<>(false, "Detail not found");
             }

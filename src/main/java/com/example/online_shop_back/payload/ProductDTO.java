@@ -18,7 +18,7 @@ public class ProductDTO {
     private double discountPercent;
     private String description;
     private UUID photoId;
-    private UUID monthlyPriceId;
+//    private UUID monthlyPriceId;
     private int warrantyMonth;
     private UUID detailId;
     private double price;
