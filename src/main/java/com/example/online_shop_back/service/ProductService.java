@@ -34,12 +34,12 @@ public class ProductService {
     DetailRepository detailRepository;
 
     public ApiResult add(ProductDTO productDTO) {
-        Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
-        Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
-        Attachment attachment = attachmentRepository.findById(productDTO.getPhotoId()).orElseGet(Attachment::new);
-//        Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
-        Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
         try {
+            Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
+            Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
+            Attachment attachment = attachmentRepository.findById(productDTO.getPhotoId()).orElseGet(Attachment::new);
+//        Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
+            Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
             if (!categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category not found");
             }

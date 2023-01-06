@@ -1,9 +1,12 @@
 package com.example.online_shop_back.security.component;
 
+import com.example.online_shop_back.entity.OrderStatusClass;
 import com.example.online_shop_back.entity.Region;
 import com.example.online_shop_back.entity.Role;
 import com.example.online_shop_back.entity.User;
+import com.example.online_shop_back.enums.OrderStatus;
 import com.example.online_shop_back.enums.RoleNameEnum;
+import com.example.online_shop_back.repository.OrderStatusRepository;
 import com.example.online_shop_back.repository.RegionRepository;
 import com.example.online_shop_back.repository.RoleRepository;
 import com.example.online_shop_back.repository.UserRepository;
@@ -35,6 +38,9 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    OrderStatusRepository orderStatusRepository;
+
     @Value(value = "${spring.jpa.hibernate.ddl-auto}")
     private String initialMode;
 
@@ -59,8 +65,6 @@ public class DataLoader implements CommandLineRunner {
             );
             userRepository.save(user);
         }
-
-
         if (regionRepository.findAll().size() == 0) {
             List<Region> regions = new ArrayList<>();
             Region andijon = new Region("Andijon");
@@ -93,6 +97,27 @@ public class DataLoader implements CommandLineRunner {
             regions.add(qoraqalpoq);
             regionRepository.saveAll(regions);
         }
+        if (orderStatusRepository.findAll().size()==0){
+            OrderStatusClass newOrder=new OrderStatusClass(OrderStatus.NEW);
+            OrderStatusClass accepted=new OrderStatusClass(OrderStatus.ACCEPTED);
+            OrderStatusClass inProgress=new OrderStatusClass(OrderStatus.IN_PROGRESS);
+            OrderStatusClass completed=new OrderStatusClass(OrderStatus.COMPLETED);
+            OrderStatusClass canceled=new OrderStatusClass(OrderStatus.CANCELED);
+            List<OrderStatusClass> list=new ArrayList<>();
+            list.add(newOrder);
+            list.add(accepted);
+            list.add(inProgress);
+            list.add(completed);
+            list.add(canceled);
+            orderStatusRepository.saveAll(list);
+//            OrderStatus[] orderStatuses=OrderStatus.values();
+//            List<OrderStatus> list=new ArrayList<>();
+//            for (OrderStatus orderStatus:orderStatuses){
+//                list.add(orderStatus);
+//                orderStatusRepository.saveAll(list);
+//            }
+        }
+
 
 
     }
@@ -112,18 +137,6 @@ public class DataLoader implements CommandLineRunner {
 //        for (RoleNameEnum nameEnum : roleNameEnums) {
 //            roles.add(new Role(nameEnum));
 //            roleRepository.saveAll(roles);
-//        }
-//
-//        int size = userRepository.findAll().size();
-//
-//        if (size == 0) {
-//
-//        }
-//
-//
-//        if (regionRepository.findAll().size() == 0) {
-//
-//
 //        }
 
 }

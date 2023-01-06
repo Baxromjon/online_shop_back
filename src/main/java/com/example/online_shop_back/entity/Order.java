@@ -30,14 +30,14 @@ public class Order extends AbsEntity {
     private double totalPrice;
 
     @Column(name = ColumnName.STATUS)
-    @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+//    @Enumerated(EnumType.STRING)
+    private String orderStatus;
 
     @Column(name = "total_discount_price")
     private double totalDiscountPrice;
 
-    @ManyToOne
-    private Payment payment;
+//    @ManyToOne
+//    private Payment payment;
 
     private String description;
 
