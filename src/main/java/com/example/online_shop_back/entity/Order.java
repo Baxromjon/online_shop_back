@@ -13,6 +13,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @Data
@@ -28,18 +29,20 @@ public class Order extends AbsEntity {
     @Column(name = "total_price")
     private double totalPrice;
 
-    @Column(name = ColumnName.STATUS, unique = true)
+    @Column(name = ColumnName.STATUS)
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
 
     @Column(name = "total_discount_price")
     private double totalDiscountPrice;
 
-    @OneToOne
-    private OutputProduct outputProduct;
-
     @ManyToOne
     private Payment payment;
 
     private String description;
+
+    @ManyToOne
+    private User user;
+
+    private Date date;
 }

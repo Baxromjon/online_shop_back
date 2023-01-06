@@ -25,32 +25,23 @@ import java.util.List;
 @SQLDelete(sql = "UPDATE " + EntityName.OUTPUT_PRODUCT + " SET deleted = TRUE WHERE id=?")
 @Where(clause = "deleted=false")
 public class OutputProduct extends AbsEntity {
-//
-//    @ManyToOne
-//    private OutputTrade outputTrade;
 
     @Column(name = "price")
     private double totalPrice;
 
-//    @ManyToMany
-//    @JoinTable(name = "product_monthly_price",
-//            joinColumns = {@JoinColumn(name = "product_id")},
-//            inverseJoinColumns = {@JoinColumn(name = "monthly_price_id")})
-//    private List<MonthlyPrice> monthlyPrices;
+    @ManyToOne
+    private Product product;
 
     @ManyToOne
-    private PayType payType;
+    private Order order;
+
+    @ManyToOne
+    private MonthlyPrice monthlyPrice;
 
     @Column(name = "amount")
     private double amount;
 
     @Column(name = "description")
     private String description;
-
-    @ManyToOne
-    private User user;
-
-    @Column(name = "date")
-    private Date date;
 
 }

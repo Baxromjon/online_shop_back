@@ -1,9 +1,11 @@
 package com.example.online_shop_back.controller;
 
+import com.example.online_shop_back.entity.User;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.PasswordDTO;
 import com.example.online_shop_back.payload.UserDTO;
 import com.example.online_shop_back.service.UserService;
+import com.example.online_shop_back.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,10 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/me")
+    public HttpEntity<?> getUser(@CurrentUser User user) {
+        return ResponseEntity.ok(new ApiResult(user, true, "Success"));
+    }
     @PostMapping("/edit_password/{id}")
     public HttpEntity<?> editPassword(@PathVariable UUID id, @Valid @RequestBody PasswordDTO passwordDTO) {
         ApiResult apiResult = userService.editPassword(id, passwordDTO);
