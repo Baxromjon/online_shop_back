@@ -42,4 +42,6 @@ public interface EntityName {
     String CRITERIA="criterias";
 
     String WISHLIST="wish_list";
+
+    String BASKET="basket";
 }

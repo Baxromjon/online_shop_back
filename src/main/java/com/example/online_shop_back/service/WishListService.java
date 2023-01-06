@@ -45,7 +45,11 @@ public class WishListService {
 
     public ApiResult delete(UUID id) {
         try {
-            wishListRepository.deleteById(id);
+            Optional<WishList> wishListOptional = wishListRepository.findById(id);
+            if (!wishListOptional.isPresent()) {
+                return new ApiResult(false, "Wish List not found");
+            }
+//            wishListRepository.deleteById(id);
             wishListRepository.deleteWishListById(id);
             return new ApiResult(true, "Successfully deleted");
         } catch (Exception e) {
