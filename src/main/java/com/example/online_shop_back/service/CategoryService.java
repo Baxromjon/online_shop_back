@@ -7,6 +7,7 @@ import com.example.online_shop_back.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,7 +26,7 @@ public class CategoryService {
             Category category = new Category();
             category.setName(categoryDTO.getName());
             category.setIndex(categoryDTO.getIndex());
-            if (categoryDTO.getCategoryId()!=null){
+            if (categoryDTO.getCategoryId() != null) {
                 category.setCategory(categoryRepository.findById(categoryDTO.getCategoryId()).orElseGet(Category::new));
             }
             categoryRepository.save(category);
@@ -53,6 +54,16 @@ public class CategoryService {
         } catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public ApiResult getAll() {
+        try {
+            List<Category> all = categoryRepository.findAll();
+            return new ApiResult(all, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Categories");
         }
     }
 }

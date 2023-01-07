@@ -30,4 +30,10 @@ public class WishListController {
         ApiResult delete = wishListService.delete(id);
         return ResponseEntity.status(delete.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(delete);
     }
+
+    @GetMapping("/get_all_by_user/{id}")
+    public HttpEntity<?> getAllByUser(@PathVariable UUID id){
+        ApiResult allByUserId = wishListService.getAllByUserId(id);
+        return ResponseEntity.status(allByUserId.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allByUserId);
+    }
 }

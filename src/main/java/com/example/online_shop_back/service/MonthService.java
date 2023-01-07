@@ -7,6 +7,7 @@ import com.example.online_shop_back.repository.MonthRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -43,6 +44,16 @@ public class MonthService {
         }catch (Exception e){
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public ApiResult getAll() {
+        try {
+            List<Month> all = monthRepository.findAll();
+            return new ApiResult(all, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Months");
         }
     }
 }

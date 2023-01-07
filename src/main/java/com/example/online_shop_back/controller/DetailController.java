@@ -29,4 +29,10 @@ public class DetailController {
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
 
+    @GetMapping("/get_all_details")
+    public HttpEntity<?> getAll(){
+        ApiResult all = detailService.getAll();
+        return ResponseEntity.status(all.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(all);
+    }
+
 }

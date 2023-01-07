@@ -28,4 +28,10 @@ public class MonthlyPriceController {
         ApiResult edit = monthService.edit(id, monthDTO);
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
+
+    @GetMapping("/get_all_monthly_price")
+    public HttpEntity<?> getAll() {
+        ApiResult all = monthService.getAll();
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
 }

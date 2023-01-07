@@ -8,6 +8,7 @@ import com.example.online_shop_back.repository.CriteriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,6 +43,16 @@ public class CriteriaService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in edit Criteria");
+        }
+    }
+
+    public ApiResult getAll() {
+        try {
+            List<Criteria> all = criteriaRepository.findAll();
+            return new ApiResult(all, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Criteria");
         }
     }
 }

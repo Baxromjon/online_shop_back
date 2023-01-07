@@ -30,4 +30,10 @@ public class PayTypeController {
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
 
+    @GetMapping("/get_all_pay_type")
+    public HttpEntity<?> getAll() {
+        ApiResult all = payTypeService.getAll();
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
+
 }

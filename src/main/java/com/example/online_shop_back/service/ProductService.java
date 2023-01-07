@@ -44,7 +44,7 @@ public class ProductService {
 //            List<Attachment> attachment = null;
 //            for (int i = 0; i < productDTO.getPhotoId().size(); i++) {
 //                attachment = attachmentRepository.findById(productDTO.getPhotoId().get(i)).orElseGet(Attachment::new);
-                List<Attachment> attachmentList = attachmentRepository.findAllById(productDTO.getPhotoId());
+            List<Attachment> attachmentList = attachmentRepository.findAllById(productDTO.getPhotoId());
 //            }
 //        Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
             Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
@@ -142,7 +142,7 @@ public class ProductService {
         try {
             Product product = productRepository.findById(id).orElseThrow();
             return new ApiResult(product, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get Product by Id");
         }
@@ -152,9 +152,38 @@ public class ProductService {
         try {
             List<Product> all = productRepository.findAll();
             return new ApiResult(all, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error");
+        }
+    }
+
+    public ApiResult getAllByCategory(UUID id) {
+        try {
+            List<Product> allByCategory = productRepository.getAllByCategory(id);
+            return new ApiResult(allByCategory, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Products by Category");
+        }
+    }
+
+    public ApiResult getAllByFlash() {
+        try {
+            List<Product> allByFlashIsTrue = productRepository.getAllByFlashIsTrue();
+            return new ApiResult(allByFlashIsTrue, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Products by Flash");
+        }
+    }
+    public ApiResult getAllByCarousel() {
+        try {
+            List<Product> allByFlashIsTrue = productRepository.getAllByCarouselIsTrue();
+            return new ApiResult(allByFlashIsTrue, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Products by Carousel");
         }
     }
 }

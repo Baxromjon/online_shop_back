@@ -24,8 +24,21 @@ public class OrderController {
     }
 
     @PostMapping("/edit_order_status/{id}")
-    public HttpEntity<?> edit(@PathVariable UUID id, OrderDTO orderDTO){
+    public HttpEntity<?> edit(@PathVariable UUID id, OrderDTO orderDTO) {
         ApiResult apiResult = orderService.editStatus(id, orderDTO);
-        return ResponseEntity.status(apiResult.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(apiResult);
+        return ResponseEntity.status(apiResult.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(apiResult);
     }
+
+    @GetMapping("/get_all_order")
+    public HttpEntity<?> getAll() {
+        ApiResult all = orderService.getAll();
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
+
+    @GetMapping("/get_all_order_by_userId/{id}")
+    public HttpEntity<?> getByUserId(@PathVariable UUID id) {
+        ApiResult allByUserId = orderService.getAllByUserId(id);
+        return ResponseEntity.status(allByUserId.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(allByUserId);
+    }
+
 }

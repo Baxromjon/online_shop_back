@@ -28,4 +28,10 @@ public class CurrencyTypeController {
         ApiResult edit = currencyTypeService.edit(id, currencyTypeDTO);
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
+
+    @GetMapping("/get_all_currency_type")
+    public HttpEntity<?> getAll() {
+        ApiResult all = currencyTypeService.getAll();
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
 }

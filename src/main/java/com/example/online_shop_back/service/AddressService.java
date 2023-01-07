@@ -7,6 +7,7 @@ import com.example.online_shop_back.payload.AddressDTO;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.repository.AddressRepository;
 import com.example.online_shop_back.repository.RegionRepository;
+import com.example.online_shop_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,9 @@ public class AddressService {
 
     @Autowired
     RegionRepository regionRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     public ApiResult add(AddressDTO addressDTO, User user) {
         try {
@@ -93,6 +97,10 @@ public class AddressService {
 
     public ApiResult getAllByUserId(UUID id) {
         try {
+            Optional<User> userOptional = userRepository.findById(id);
+            if (!userOptional.isPresent()){
+                return new ApiResult(false, "User not found");
+            }
             List<Address> addressList = addressRepository.findByUserId(id);
             return new ApiResult(addressList,true);
         } catch (Exception e) {

@@ -7,6 +7,7 @@ import com.example.online_shop_back.repository.CurrencyTypeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -44,6 +45,16 @@ public class CurrencyTypeService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in edit Currency type");
+        }
+    }
+
+    public ApiResult getAll() {
+        try {
+            List<CurrencyType> all = currencyTypeRepository.findAll();
+            return new ApiResult(all, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all currency type");
         }
     }
 }

@@ -29,4 +29,10 @@ public class CriteriaController {
         ApiResult edit = criteriaService.edit(id, criteriaDTO);
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
+
+    @GetMapping("/get_all_criteria")
+    public HttpEntity<?> getAll() {
+        ApiResult all = criteriaService.getAll();
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
 }

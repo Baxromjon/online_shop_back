@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -57,6 +58,26 @@ public class OrderService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in edit order status");
+        }
+    }
+
+    public ApiResult getAll() {
+        try {
+            List<Order> all = orderRepository.findAll();
+            return new ApiResult(all, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Orders");
+        }
+    }
+
+    public ApiResult getAllByUserId(UUID id) {
+        try {
+            List<Order> allOrdersByUserId = orderRepository.getAllOrdersByUserId(id);
+            return new ApiResult(allOrdersByUserId, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Orders by User");
         }
     }
 }

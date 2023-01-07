@@ -30,4 +30,10 @@ public class ValueController {
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
 
+    @GetMapping("/get_all_value")
+    public HttpEntity<?> getAll(){
+        ApiResult all = valueService.getAll();
+        return ResponseEntity.status(all.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(all);
+    }
+
 }

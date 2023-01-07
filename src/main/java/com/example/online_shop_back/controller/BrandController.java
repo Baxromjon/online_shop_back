@@ -36,5 +36,11 @@ public class BrandController {
         return ResponseEntity.status(delete.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(delete);
     }
 
+    @GetMapping("/getAll")
+    public HttpEntity<?> getAll(){
+        ApiResult all = brandService.getAll();
+        return ResponseEntity.status(all.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(all);
+    }
+
 
 }

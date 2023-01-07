@@ -41,4 +41,23 @@ public class ProductController {
         ApiResult all = productService.getAll();
         return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
     }
+
+    @GetMapping("/get_all_by_category/{id}")
+    public HttpEntity<?> getAllByCategory(@PathVariable UUID id){
+        ApiResult allByCategory = productService.getAllByCategory(id);
+        return ResponseEntity.status(allByCategory.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allByCategory);
+    }
+
+    @GetMapping("/get_all_by_flash")
+    public HttpEntity<?> getAllByFlash(){
+        ApiResult allByFlash = productService.getAllByFlash();
+        return ResponseEntity.status(allByFlash.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allByFlash);
+    }
+    @GetMapping("/get_all_by_carousel")
+    public HttpEntity<?> getAllByCarousel(){
+        ApiResult allByFlash = productService.getAllByCarousel();
+        return ResponseEntity.status(allByFlash.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allByFlash);
+    }
+
+
 }

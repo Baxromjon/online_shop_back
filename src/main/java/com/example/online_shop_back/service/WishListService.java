@@ -11,6 +11,7 @@ import com.example.online_shop_back.repository.WishListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,6 +55,20 @@ public class WishListService {
             return new ApiResult(true, "Successfully deleted");
         } catch (Exception e) {
             return new ApiResult(false, "Error in delete wishlist");
+        }
+    }
+
+    public ApiResult getAllByUserId(UUID id) {
+        try {
+            Optional<User> userOptional = userRepository.findById(id);
+            if (!userOptional.isPresent()) {
+                return new ApiResult(false, "User not found");
+            }
+            List<WishList> allByUser = wishListRepository.findAllByUser(userOptional.get());
+            return new ApiResult(allByUser, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all Wish List by User");
         }
     }
 }

@@ -30,4 +30,10 @@ public class MeasurementController {
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
 
+    @GetMapping("/get_all_measurement")
+    public HttpEntity<?> getAll() {
+        ApiResult all = measurementService.getAll();
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
+
 }
