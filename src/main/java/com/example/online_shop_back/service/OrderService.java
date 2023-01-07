@@ -38,7 +38,7 @@ public class OrderService {
                     orderDTO.getDescription(),
                     userOptional.get(),
                     new Date(),
-                    randomOrderId()
+                    orderId
             );
             orderRepository.save(order);
             return new ApiResult(true, "Order successfully saved");
