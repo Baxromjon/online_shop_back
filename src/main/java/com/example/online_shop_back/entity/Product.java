@@ -54,6 +54,13 @@ public class Product extends AbsEntity {
     @Column(name = "warranty_month")
     private int warrantyMonth;
 
+    private boolean flash;// FLASH TAKLIFLAR UCHUN
+
+    @ManyToOne
+    private Brand brand;
+
+    private boolean carousel; //HOME PAGEDA CAROUSELGA QO`YISH UCHUN
+
     @ManyToOne
     private Detail detail;
 

@@ -2,6 +2,7 @@ package com.example.online_shop_back.service;
 
 import com.example.online_shop_back.entity.Address;
 import com.example.online_shop_back.entity.Region;
+import com.example.online_shop_back.entity.User;
 import com.example.online_shop_back.payload.AddressDTO;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.repository.AddressRepository;
@@ -9,6 +10,7 @@ import com.example.online_shop_back.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public class AddressService {
     @Autowired
     RegionRepository regionRepository;
 
-    public ApiResult add(AddressDTO addressDTO) {
+    public ApiResult add(AddressDTO addressDTO, User user) {
         try {
             Optional<Region> regionOptional = regionRepository.findById(addressDTO.getRegionId());
             if (!regionOptional.isPresent()) {
@@ -32,7 +34,8 @@ public class AddressService {
                     addressDTO.getHome(),
                     addressDTO.getDistrict(),
                     addressDTO.getAddress(),
-                    regionOptional.get()
+                    regionOptional.get(),
+                    user
             );
             addressRepository.save(address);
             return new ApiResult(true, "Address successfully saved");
@@ -75,6 +78,26 @@ public class AddressService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in delete");
+        }
+    }
+
+    public ApiResult getById(UUID id) {
+        try {
+            Address address = addressRepository.findById(id).orElseThrow();
+            return new ApiResult(address, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get Address by Id");
+        }
+    }
+
+    public ApiResult getAllByUserId(UUID id) {
+        try {
+            List<Address> addressList = addressRepository.findByUserId(id);
+            return new ApiResult(addressList,true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get Address by User");
         }
     }
 }

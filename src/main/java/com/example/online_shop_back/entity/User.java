@@ -44,8 +44,8 @@ public class User extends AbsEntity implements UserDetails {
     @Column(name = ColumnName.EMAIL)
     private String email;
 
-    @ManyToOne
-    private Address address;
+//    @ManyToOne
+//    private Address address;
 
     @Column(name = ColumnName.ACCOUNT_NON_EXPIRED)
     private boolean accountNonExpired = true;

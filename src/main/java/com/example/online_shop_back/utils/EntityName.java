@@ -46,4 +46,6 @@ public interface EntityName {
     String BASKET="basket";
 
     String ORDER_STATUS="order_status";
+
+    String BRAND="brands";
 }

@@ -29,4 +29,16 @@ public class ProductController {
         ApiResult edit = productService.edit(id, productDTO);
         return ResponseEntity.status(edit.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(edit);
     }
+
+    @GetMapping("/getById/{id}")
+    public HttpEntity<?> getById(@PathVariable UUID id) {
+        ApiResult byId = productService.getById(id);
+        return ResponseEntity.status(byId.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(byId);
+    }
+
+    @GetMapping("/getAllProduct")
+    public HttpEntity<?> getAll() {
+        ApiResult all = productService.getAll();
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
 }
