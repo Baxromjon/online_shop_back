@@ -10,10 +10,7 @@ import com.example.online_shop_back.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class OrderService {
@@ -29,13 +26,19 @@ public class OrderService {
             if (!userOptional.isPresent()) {
                 return new ApiResult(false, "User not found");
             }
+            String orderId = randomOrderId();
+            boolean exists = orderRepository.existsByOrderId(orderId);
+            if (exists) {
+                return new ApiResult(false, "OrderId exists");
+            }
             Order order = new Order(
                     orderDTO.getTotalPrice(),
                     OrderStatus.NEW.toString(),
                     orderDTO.getTotalDiscountPrice(),
                     orderDTO.getDescription(),
                     userOptional.get(),
-                    new Date()
+                    new Date(),
+                    randomOrderId()
             );
             orderRepository.save(order);
             return new ApiResult(true, "Order successfully saved");
@@ -65,7 +68,7 @@ public class OrderService {
         try {
             List<Order> all = orderRepository.findAll();
             return new ApiResult(all, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get all Orders");
         }
@@ -75,9 +78,25 @@ public class OrderService {
         try {
             List<Order> allOrdersByUserId = orderRepository.getAllOrdersByUserId(id);
             return new ApiResult(allOrdersByUserId, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get all Orders by User");
         }
     }
+
+    public String randomOrderId() {
+        int max = 9999999;
+        int min = 1000000;
+        int floor = (int) Math.floor(Math.random() * (max - min + 1) + min);
+        Random rnd = new Random();
+        final String AB = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        StringBuilder alphabat = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            alphabat.append(AB.charAt(rnd.nextInt(AB.length())));
+        }
+        alphabat.append(floor);
+        return alphabat.toString();
+    }
+
+
 }

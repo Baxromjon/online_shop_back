@@ -45,4 +45,7 @@ public class Order extends AbsEntity {
     private User user;
 
     private Date date;
+
+    @Column(unique = true, length = 10)
+    private String orderId;
 }

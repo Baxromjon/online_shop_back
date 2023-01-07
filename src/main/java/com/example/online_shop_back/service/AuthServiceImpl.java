@@ -40,7 +40,6 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
 
     @Override
     public ApiResult register(RegisterDTO registerDTO) {
-//        if (registerDTO.getPassword().equals(registerDTO.getPrePassword())) {
             Set<Role> role = roleRepository.findByName(RoleNameEnum.ROLE_USER);
             Optional<User> userOptional = userRepository.findByPhoneNumberAndRolesIn(registerDTO.getPhoneNumber(), role);
             User user = userOptional.orElseGet(User::new);
@@ -50,17 +49,12 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
                 return new ApiResult(false, "Allready exists");
             }
             if (!userOptional.isPresent()) {
-//                user.setFirstName(registerDTO.getFirstName());
-//                user.setLastName(registerDTO.getLastName());
                 user.setPhoneNumber(registerDTO.getPhoneNumber());
                 user.setPassword(passwordEncoder.encode(passwordRandom));
                 user.setRoles(role);
             }
             userRepository.save(user);
             return new ApiResult(passwordRandom,true, "Successfully registered");
-//        }
-//        return new ApiResult(false, "password don`t match");
-
     }
 
     public char[] randomPassword(int length){
