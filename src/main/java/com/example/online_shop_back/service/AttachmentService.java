@@ -32,7 +32,7 @@ public class AttachmentService {
             MultipartFile file = request.getFile("file");
             assert file != null;
             Attachment attachment = attachmentRepository.save(new Attachment(
-                    file.getName(), file.getSize(), file.getContentType()
+                    file.getOriginalFilename(), file.getSize(), file.getContentType()
             ));
             try {
                 attachmentContentRepository.save(new AttachmentContent(attachment, file.getBytes()));

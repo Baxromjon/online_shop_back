@@ -1,6 +1,7 @@
 package com.example.online_shop_back.service;
 
 import com.example.online_shop_back.entity.*;
+import com.example.online_shop_back.mapper.ProductMapper;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.MonthlyPriceDTO;
 import com.example.online_shop_back.payload.ProductDTO;
@@ -41,12 +42,7 @@ public class ProductService {
         try {
             Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
             Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
-//            List<Attachment> attachment = null;
-//            for (int i = 0; i < productDTO.getPhotoId().size(); i++) {
-//                attachment = attachmentRepository.findById(productDTO.getPhotoId().get(i)).orElseGet(Attachment::new);
             List<Attachment> attachmentList = attachmentRepository.findAllById(productDTO.getPhotoId());
-//            }
-//        Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
             Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
             if (!categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category not found");
@@ -54,9 +50,6 @@ public class ProductService {
             if (!measurementOptional.isPresent()) {
                 return new ApiResult(false, "measurement not found");
             }
-//            if (!monthlyPriceOptional.isPresent()) {
-//                return new ApiResult(false, "Monthly price not found");
-//            }
             if (!detailOptional.isPresent()) {
                 return new ApiResult<>(false, "Detail not found");
             }
@@ -76,7 +69,6 @@ public class ProductService {
             product.setPrice(productDTO.getPrice());
             product.setDiscountPercent(productDTO.getDiscountPercent());
             product.setDescription(productDTO.getDescription());
-//                    attachment,
             product.setWarrantyMonth(productDTO.getWarrantyMonth());
             product.setDetail(detailOptional.get());
             product.setPhoto(attachmentList);
@@ -98,8 +90,6 @@ public class ProductService {
         if (productOptional.isPresent()) {
             Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
             Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
-//            Attachment attachment = attachmentRepository.findById(productDTO.getPhotoId()).orElseGet(Attachment::new);
-//            Optional<MonthlyPrice> monthlyPriceOptional = monthlyPriceRepository.findById(productDTO.getMonthlyPriceId());
             Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
             if (!categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category not found");
@@ -107,9 +97,6 @@ public class ProductService {
             if (!measurementOptional.isPresent()) {
                 return new ApiResult(false, "measurement not found");
             }
-//            if (!monthlyPriceOptional.isPresent()) {
-//                return new ApiResult(false, "Monthly price not found");
-//            }
             if (!detailOptional.isPresent()) {
                 return new ApiResult<>(false, "Detail not found");
             }
@@ -121,7 +108,6 @@ public class ProductService {
             product.setCategory(categoryOptional.get());
             product.setDetail(detailOptional.get());
             product.setName(product.getName());
-//            product.setPhoto(Collections.singletonList(attachment));
             product.setPrice(productDTO.getPrice());
             product.setDescription(productDTO.getDescription());
             product.setMeasurement(measurementOptional.get());
@@ -172,16 +158,17 @@ public class ProductService {
         try {
             List<Product> allByFlashIsTrue = productRepository.getAllByFlashIsTrue();
             return new ApiResult(allByFlashIsTrue, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get all Products by Flash");
         }
     }
+
     public ApiResult getAllByCarousel() {
         try {
             List<Product> allByFlashIsTrue = productRepository.getAllByCarouselIsTrue();
             return new ApiResult(allByFlashIsTrue, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get all Products by Carousel");
         }

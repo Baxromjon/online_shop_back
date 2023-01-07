@@ -1,8 +1,10 @@
 package com.example.online_shop_back.service;
 
+import com.example.online_shop_back.entity.Attachment;
 import com.example.online_shop_back.entity.Brand;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.BrandDTO;
+import com.example.online_shop_back.repository.AttachmentRepository;
 import com.example.online_shop_back.repository.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +18,20 @@ public class BrandService {
     @Autowired
     BrandRepository brandRepository;
 
+    @Autowired
+    AttachmentRepository attachmentRepository;
+
     public ApiResult add(BrandDTO brandDTO) {
         try {
             Optional<Brand> brandOptional = brandRepository.findByName(brandDTO.getName());
+            Optional<Attachment> attachmentOptional = attachmentRepository.findById(brandDTO.getPhotoId());
             if (brandOptional.isPresent()) {
                 return new ApiResult(false, "This brand allready successfully");
             }
-            Brand brand = new Brand(brandDTO.getName());
+            if (!attachmentOptional.isPresent()){
+                return new ApiResult(false, "Photo not found");
+            }
+            Brand brand = new Brand(brandDTO.getName(), attachmentOptional.get());
             brandRepository.save(brand);
             return new ApiResult(true, "Brand Successfully saved");
         } catch (Exception e) {
@@ -34,11 +43,16 @@ public class BrandService {
     public ApiResult edit(UUID id, BrandDTO brandDTO) {
         try {
             Optional<Brand> brandOptional = brandRepository.findById(id);
+            Optional<Attachment> attachmentOptional = attachmentRepository.findById(brandDTO.getPhotoId());
             if (!brandOptional.isPresent()) {
                 return new ApiResult(false, "Brand not found");
             }
+            if (!attachmentOptional.isPresent()){
+                return new ApiResult(false, "Photo not found");
+            }
             Brand brand = brandOptional.get();
             brand.setName(brandDTO.getName());
+            brand.setAttachment(attachmentOptional.get());
             brandRepository.save(brand);
             return new ApiResult(true, "Brand Successfully edited");
         } catch (Exception e) {
