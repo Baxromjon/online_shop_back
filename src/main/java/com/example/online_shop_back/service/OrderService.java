@@ -58,25 +58,24 @@ public class OrderService {
             Month month = monthRepository.findById(orderDTO.getMonthId()).orElseThrow();
             List<ProductProjection> allProductFromBasket = basketRepository.getAllProductFromBasket(orderDTO.getUserId(), month.getMonth());
             List<OutputProduct> outputProducts = new ArrayList<>();
-//            for (int i = 0; i < allProductFromBasket.size(); i++) {
-//                OutputProduct outputProduct = new OutputProduct();
-//                outputProduct.setOrder(order);
-//                outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
-//                outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
-//                outputProducts.add(outputProduct);
-//            }
-//
-//            outputProductRepository.saveAll(outputProducts);
+            for (int i = 0; i < allProductFromBasket.size(); i++) {
+                OutputProduct outputProduct = new OutputProduct();
+                outputProduct.setOrder(order);
+                outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
+                outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
+                outputProducts.add(outputProduct);
+
+            }
+
+            outputProductRepository.saveAll(outputProducts);
 
 
 //            double allProductPrice = outputProductRepository.getAllProductPrice(order.getId());
-            double totalPrice = basketRepository.getTotalPrice(orderDTO.getUserId());
-
+            double totalPrice = basketRepository.getTotalPrice(orderDTO.getUserId(), month.getMonth());
             List<OrderMonth> orderMonths = new ArrayList<>();
 
-            double price=0;
             double monthlyPrice = basketRepository.getMonthlyPrice(orderDTO.getUserId(), month.getMonth());
-            order.setTotalPrice(monthlyPrice*month.getMonth());
+            order.setTotalPrice(totalPrice);
 
 
             for (int i = 0; i < month.getMonth(); i++) {
