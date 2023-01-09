@@ -48,4 +48,8 @@ public interface EntityName {
     String ORDER_STATUS="order_status";
 
     String BRAND="brands";
+
+    String ORDER_MONTH="order_month";
+
+    String ORDER_MONTH_PAYMENT="order_month_payment";
 }
