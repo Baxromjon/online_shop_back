@@ -23,7 +23,7 @@ public interface OrderMonthRepository extends JpaRepository<OrderMonth, UUID> {
     @Query(nativeQuery = true, value = "select sum(om.price) from order_month om\n" +
             "inner join orders o on o.id = om.order_id\n" +
             "where o.order_id=:orderId\n" +
-            "and pay_status='PAID'")
+            "and pay_status='UNPAID'")
     double getRemainPrice(String orderId);
 
     @Query(nativeQuery = true, value = "select sum(order_month.price)\n" +

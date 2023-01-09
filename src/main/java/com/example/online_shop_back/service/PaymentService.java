@@ -40,6 +40,9 @@ public class PaymentService {
             paymentRepository.save(payment);
 
             OrderMonth orderMonth = orderMonthRepository.getByOrderId(paymentDTO.getOrderId());
+            if (orderMonth==null){
+                return new ApiResult(false,"No such Order found!");
+            }
             orderMonth.setPayment(payment);
             orderMonth.setPayStatus(PayStatus.PAID);
             orderMonth.setPaidPrice(paymentDTO.getAmount());
