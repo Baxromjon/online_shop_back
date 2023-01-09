@@ -12,14 +12,12 @@ import java.util.UUID;
 @NoArgsConstructor
 public class OrderDTO {
     private UUID id;
-    private double totalPrice;
-    private double totalDiscountPrice;
     private String description;
     private UUID userId;
-    private String orderStatus;
-    private List<UUID> productId;
+//    private String orderStatus;
+//    private List<UUID> productId;
     //    private UUID orderId;
-    private double amount;
+//    private double amount;
     private UUID monthId;
 
 }

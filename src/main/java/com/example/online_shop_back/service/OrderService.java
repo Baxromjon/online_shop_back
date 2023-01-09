@@ -50,7 +50,6 @@ public class OrderService {
             Order order = new Order();
             order.setOrderStatus(OrderStatus.NEW.toString());
             order.setDescription(orderDTO.getDescription());
-//            order.setTotalDiscountPrice(orderDTO.getTotalDiscountPrice());
             order.setUser(userOptional.get());
             order.setOrderId(orderId);
             order.setDate(new Date());
@@ -58,25 +57,22 @@ public class OrderService {
             Month month = monthRepository.findById(orderDTO.getMonthId()).orElseThrow();
             List<ProductProjection> allProductFromBasket = basketRepository.getAllProductFromBasket(orderDTO.getUserId(), month.getMonth());
             List<OutputProduct> outputProducts = new ArrayList<>();
+            double totalPrice = 0;
             for (int i = 0; i < allProductFromBasket.size(); i++) {
                 OutputProduct outputProduct = new OutputProduct();
                 outputProduct.setOrder(order);
                 outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
                 outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
                 outputProducts.add(outputProduct);
-
+                totalPrice += allProductFromBasket.get(i).getTotalPrice();
             }
 
             outputProductRepository.saveAll(outputProducts);
 
-
-//            double allProductPrice = outputProductRepository.getAllProductPrice(order.getId());
-            double totalPrice = basketRepository.getTotalPrice(orderDTO.getUserId(), month.getMonth());
             List<OrderMonth> orderMonths = new ArrayList<>();
 
             double monthlyPrice = basketRepository.getMonthlyPrice(orderDTO.getUserId(), month.getMonth());
             order.setTotalPrice(totalPrice);
-
 
             for (int i = 0; i < month.getMonth(); i++) {
                 OrderMonth orderMonth = new OrderMonth();
