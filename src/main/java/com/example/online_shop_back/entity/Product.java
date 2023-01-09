@@ -36,6 +36,8 @@ public class Product extends AbsEntity {
     @Column(name = "price")
     private double price;
 
+    private double totalPrice;
+
     @Column(name = "discount_percent")
     private double discountPercent;
 

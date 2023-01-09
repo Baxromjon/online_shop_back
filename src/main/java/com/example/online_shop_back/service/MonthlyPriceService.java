@@ -39,7 +39,10 @@ public class MonthlyPriceService {
             MonthlyPrice monthlyPrice = new MonthlyPrice();
             monthlyPrice.setMonth(optional.get());
             monthlyPrice.setProduct(optionalProduct.get());
-            monthlyPrice.setPrice(monthDTO.getPrice());
+            monthlyPrice.setPrice(optionalProduct.get().getDiscountPercent() > 0 ?
+                    monthDTO.getPrice() - (monthDTO.getPrice() * optionalProduct.get().getDiscountPercent() / 100) :
+                    monthDTO.getPrice()
+            );
             monthlyPriceRepository.save(monthlyPrice);
 
             return new ApiResult(true, "Successfully added");
@@ -78,7 +81,7 @@ public class MonthlyPriceService {
         try {
             List<MonthlyPrice> all = monthlyPriceRepository.findAll();
             return new ApiResult(all, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get all Monthly Price");
         }

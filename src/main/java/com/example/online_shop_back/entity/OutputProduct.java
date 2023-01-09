@@ -3,6 +3,7 @@ package com.example.online_shop_back.entity;
 import com.example.online_shop_back.entity.template.AbsEntity;
 import com.example.online_shop_back.utils.ColumnName;
 import com.example.online_shop_back.utils.EntityName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -40,8 +41,5 @@ public class OutputProduct extends AbsEntity {
 
     @Column(name = "amount")
     private double amount;
-
-    @Column(name = "description")
-    private String description;
 
 }

@@ -76,6 +76,9 @@ public class ProductService {
             product.setBrand(brandOptional.get());
             product.setFlash(productDTO.isFlash());
             product.setCarousel(productDTO.isCarousel());
+            product.setTotalPrice(productDTO.getDiscountPercent() > 0 ?
+                    productDTO.getPrice() - (productDTO.getPrice() * productDTO.getDiscountPercent() / 100) : productDTO.getPrice()
+            );
 
             productRepository.save(product);
             return new ApiResult(true, "Product successfully saved");

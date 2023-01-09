@@ -2,6 +2,7 @@ package com.example.online_shop_back.controller;
 
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.OrderDTO;
+import com.example.online_shop_back.payload.OutputProductDTO;
 import com.example.online_shop_back.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;

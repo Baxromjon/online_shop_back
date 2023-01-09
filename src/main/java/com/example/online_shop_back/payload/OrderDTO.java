@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,5 +17,9 @@ public class OrderDTO {
     private String description;
     private UUID userId;
     private String orderStatus;
+    private List<UUID> productId;
+    //    private UUID orderId;
+    private double amount;
+    private UUID monthId;
 
 }

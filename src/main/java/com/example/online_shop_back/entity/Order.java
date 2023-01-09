@@ -33,8 +33,8 @@ public class Order extends AbsEntity {
 //    @Enumerated(EnumType.STRING)
     private String orderStatus;
 
-    @Column(name = "total_discount_price")
-    private double totalDiscountPrice;
+//    @Column(name = "total_discount_price")
+//    private double totalDiscountPrice;
 
 //    @ManyToOne
 //    private Payment payment;

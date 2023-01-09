@@ -1,12 +1,13 @@
 package com.example.online_shop_back.service;
 
-import com.example.online_shop_back.entity.Order;
-import com.example.online_shop_back.entity.User;
+import com.example.online_shop_back.entity.*;
 import com.example.online_shop_back.enums.OrderStatus;
+import com.example.online_shop_back.enums.PayStatus;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.OrderDTO;
-import com.example.online_shop_back.repository.OrderRepository;
-import com.example.online_shop_back.repository.UserRepository;
+import com.example.online_shop_back.payload.OutputProductDTO;
+import com.example.online_shop_back.projection.ProductProjection;
+import com.example.online_shop_back.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +21,21 @@ public class OrderService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    OutputProductRepository outputProductRepository;
+
+    @Autowired
+    ProductRepository productRepository;
+
+    @Autowired
+    OrderMonthRepository orderMonthRepository;
+
+    @Autowired
+    MonthRepository monthRepository;
+
+    @Autowired
+    BasketRepository basketRepository;
+
     public ApiResult add(OrderDTO orderDTO) {
         try {
             Optional<User> userOptional = userRepository.findById(orderDTO.getUserId());
@@ -31,15 +47,48 @@ public class OrderService {
             if (exists) {
                 return new ApiResult(false, "OrderId exists");
             }
-            Order order = new Order(
-                    orderDTO.getTotalPrice(),
-                    OrderStatus.NEW.toString(),
-                    orderDTO.getTotalDiscountPrice(),
-                    orderDTO.getDescription(),
-                    userOptional.get(),
-                    new Date(),
-                    orderId
-            );
+            Order order = new Order();
+            order.setOrderStatus(OrderStatus.NEW.toString());
+            order.setDescription(orderDTO.getDescription());
+//            order.setTotalDiscountPrice(orderDTO.getTotalDiscountPrice());
+            order.setUser(userOptional.get());
+            order.setOrderId(orderId);
+            order.setDate(new Date());
+            orderRepository.save(order);
+            Month month = monthRepository.findById(orderDTO.getMonthId()).orElseThrow();
+            List<ProductProjection> allProductFromBasket = basketRepository.getAllProductFromBasket(orderDTO.getUserId(), month.getMonth());
+            List<OutputProduct> outputProducts = new ArrayList<>();
+//            for (int i = 0; i < allProductFromBasket.size(); i++) {
+//                OutputProduct outputProduct = new OutputProduct();
+//                outputProduct.setOrder(order);
+//                outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
+//                outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
+//                outputProducts.add(outputProduct);
+//            }
+//
+//            outputProductRepository.saveAll(outputProducts);
+
+
+//            double allProductPrice = outputProductRepository.getAllProductPrice(order.getId());
+            double totalPrice = basketRepository.getTotalPrice(orderDTO.getUserId());
+
+            List<OrderMonth> orderMonths = new ArrayList<>();
+
+            double price=0;
+            double monthlyPrice = basketRepository.getMonthlyPrice(orderDTO.getUserId(), month.getMonth());
+            order.setTotalPrice(monthlyPrice*month.getMonth());
+
+
+            for (int i = 0; i < month.getMonth(); i++) {
+                OrderMonth orderMonth = new OrderMonth();
+                orderMonth.setOrder(order);
+                orderMonth.setPayStatus(PayStatus.UNPAID);
+                orderMonth.setPrice(0);
+                orderMonth.setDeadline(new Date());
+                orderMonths.add(orderMonth);
+                orderMonth.setPrice(monthlyPrice);
+            }
+            orderMonthRepository.saveAll(orderMonths);
             orderRepository.save(order);
             return new ApiResult(true, "Order successfully saved");
         } catch (Exception e) {
