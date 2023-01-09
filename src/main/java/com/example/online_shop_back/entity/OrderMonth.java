@@ -32,6 +32,10 @@ public class OrderMonth extends AbsEntity {
 
     private double price;
 
+    private double paidPrice;
+
+    private double remains;
+
     private Date deadline;
 
     @Enumerated(EnumType.STRING)
