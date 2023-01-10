@@ -5,7 +5,6 @@ import com.example.online_shop_back.enums.OrderStatus;
 import com.example.online_shop_back.enums.PayStatus;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.OrderDTO;
-import com.example.online_shop_back.payload.OutputProductDTO;
 import com.example.online_shop_back.projection.ProductProjection;
 import com.example.online_shop_back.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,15 +70,14 @@ public class OrderService {
                 outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
                 outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
                 outputProducts.add(outputProduct);
-                totalPrice += allProductFromBasket.get(i).getTotalPrice();
+                totalPrice += allProductFromBasket.get(i).getMonthlyPrice();
             }
 
             outputProductRepository.saveAll(outputProducts);
-
             List<OrderMonth> orderMonths = new ArrayList<>();
 
             double monthlyPrice = basketRepository.getMonthlyPrice(orderDTO.getUserId(), month.getMonth());
-            order.setTotalPrice(totalPrice);
+            order.setTotalPrice(totalPrice * month.getMonth());
             Date date = new Date();
             for (int i = 0; i < month.getMonth(); i++) {
                 OrderMonth orderMonth = new OrderMonth();

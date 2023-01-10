@@ -56,6 +56,11 @@ public class PaymentService {
                 orderMonth1.setPrice(orderMonth1.getPrice() + orderMonth.getRemains());
                 orderMonthRepository.save(orderMonth1);
             }
+//            if (paymentDTO.getAmount() > orderMonth.getPrice()) {
+//                OrderMonth orderMonth1 = orderMonthRepository.getByOrderId(paymentDTO.getOrderId());
+//                orderMonth1.setPrice(orderMonth1.getPrice() - (paymentDTO.getAmount() - orderMonth.getPrice()));
+//                orderMonthRepository.save(orderMonth1);
+//            }
 
             double remainPrice = orderMonthRepository.getRemainPrice(paymentDTO.getOrderId());
             if (remainPrice == 0) {
