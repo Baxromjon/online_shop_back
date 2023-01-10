@@ -9,6 +9,7 @@ import com.example.online_shop_back.security.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Date;
 
 @Service
@@ -28,20 +29,20 @@ public class PaymentService {
     @Autowired
     OrderMonthRepository orderMonthRepository;
 
-    @Autowired
-    OrderMonthPaymentRepository orderMonthPaymentRepository;
+//    @Autowired
+//    OrderMonthPaymentRepository orderMonthPaymentRepository;
 
     public ApiResult add(PaymentDTO paymentDTO) {
         try {
             PayType payType = payTypeRepository.findById(paymentDTO.getPayTypeId()).orElseThrow(() -> new ResourceNotFoundException("payType", "payTypeId", paymentDTO.getPayTypeId()));
             User user = userRepository.findById(paymentDTO.getUserId()).orElseThrow(() -> new ResourceNotFoundException("user", "userId", paymentDTO.getUserId()));
             Order order = orderRepository.findByOrderId(paymentDTO.getOrderId());
-            Payment payment = new Payment(user, payType, paymentDTO.getAmount(), new Date(), paymentDTO.getDescription(), order);
+            Payment payment = new Payment(user, payType, paymentDTO.getAmount(), new Date(), paymentDTO.getDescription(), Collections.singletonList(order));
             paymentRepository.save(payment);
 
             OrderMonth orderMonth = orderMonthRepository.getByOrderId(paymentDTO.getOrderId());
-            if (orderMonth==null){
-                return new ApiResult(false,"No such Order found!");
+            if (orderMonth == null) {
+                return new ApiResult(false, "No such Order found!");
             }
             orderMonth.setPayment(payment);
             orderMonth.setPayStatus(PayStatus.PAID);
@@ -54,9 +55,7 @@ public class PaymentService {
                 OrderMonth orderMonth1 = orderMonthRepository.getByOrderId(paymentDTO.getOrderId());
                 orderMonth1.setPrice(orderMonth1.getPrice() + orderMonth.getRemains());
                 orderMonthRepository.save(orderMonth1);
-
             }
-
 
             double remainPrice = orderMonthRepository.getRemainPrice(paymentDTO.getOrderId());
             if (remainPrice == 0) {

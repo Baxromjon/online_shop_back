@@ -12,12 +12,13 @@ import java.util.UUID;
 public interface OrderMonthRepository extends JpaRepository<OrderMonth, UUID> {
 
     @Query(nativeQuery = true, value = "select order_month.*\n" +
-            "from order_month\n" +
-            "inner join orders o on o.id = order_month.order_id\n" +
-            "where o.order_id = :orderId\n" +
-            "  and pay_status = 'UNPAID'\n" +
-            "order by deadline\n" +
-            "limit 1")
+            "            from order_month\n" +
+            "            inner join orders o on o.id = order_month.order_id\n" +
+            "            where o.order_id = :orderId\n" +
+            "              and pay_status = 'UNPAID'\n" +
+            "              and o.status = 'CANCELED'\n" +
+            "            order by deadline\n" +
+            "            limit 1")
     OrderMonth getByOrderId(String orderId);
 
     @Query(nativeQuery = true, value = "select sum(om.price) from order_month om\n" +

@@ -12,8 +12,10 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -41,6 +43,6 @@ public class Payment extends AbsEntity {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne
-    private Order order;
+    @ManyToMany
+    private List<Order> orders;
 }

@@ -11,6 +11,7 @@ import com.example.online_shop_back.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.*;
 
 @Service
@@ -35,6 +36,12 @@ public class OrderService {
 
     @Autowired
     BasketRepository basketRepository;
+
+    @Autowired
+    OrderStatusRepository orderStatusRepository;
+
+    @Autowired
+    AddressRepository addressRepository;
 
     public ApiResult add(OrderDTO orderDTO) {
         try {
@@ -73,18 +80,19 @@ public class OrderService {
 
             double monthlyPrice = basketRepository.getMonthlyPrice(orderDTO.getUserId(), month.getMonth());
             order.setTotalPrice(totalPrice);
-
+            Date date = new Date();
             for (int i = 0; i < month.getMonth(); i++) {
                 OrderMonth orderMonth = new OrderMonth();
                 orderMonth.setOrder(order);
                 orderMonth.setPayStatus(PayStatus.UNPAID);
                 orderMonth.setPrice(0);
-                orderMonth.setDeadline(new Date());
+                orderMonth.setDeadline(new Date(date.getYear(), date.getMonth()+i, date.getDay()));
                 orderMonths.add(orderMonth);
                 orderMonth.setPrice(monthlyPrice);
             }
             orderMonthRepository.saveAll(orderMonths);
             orderRepository.save(order);
+            basketRepository.deleteByUserId(orderDTO.getUserId());
             return new ApiResult(true, "Order successfully saved");
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,14 +100,15 @@ public class OrderService {
         }
     }
 
-    public ApiResult editStatus(UUID id, OrderDTO orderDTO) {
+    public ApiResult editStatus(UUID id, UUID statusId) {
         try {
             Optional<Order> orderOptional = orderRepository.findById(id);
             if (!orderOptional.isPresent()) {
                 return new ApiResult(false, "Order not found");
             }
+            OrderStatusClass orderStatusClass = orderStatusRepository.findById(statusId).orElseThrow();
             Order order = orderOptional.get();
-            order.setOrderStatus(order.getOrderStatus());
+            order.setOrderStatus(orderStatusClass.getOrderStatus().toString());
             orderRepository.save(order);
             return new ApiResult(true, "Order status successfully edited");
         } catch (Exception e) {
@@ -140,6 +149,10 @@ public class OrderService {
         }
         alphabat.append(floor);
         return alphabat.toString();
+    }
+
+    public static Date convertToDateUsingDate(LocalDate date) {
+        return java.sql.Date.valueOf(date);
     }
 
 

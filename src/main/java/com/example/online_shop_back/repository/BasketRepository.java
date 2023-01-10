@@ -56,4 +56,10 @@ public interface BasketRepository extends JpaRepository<Basket, UUID> {
             "where b.user_id = :userId\n" +
             "  and m.month = :month")
     double getTotalPrice(UUID userId, int month);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(nativeQuery = true, value = "delete from basket\n" +
+            "where user_id=:userId")
+    void deleteByUserId(UUID userId);
 }

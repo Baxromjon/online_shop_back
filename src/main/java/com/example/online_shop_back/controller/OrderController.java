@@ -24,9 +24,9 @@ public class OrderController {
         return ResponseEntity.status(add.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(add);
     }
 
-    @PostMapping("/edit_order_status/{id}")
-    public HttpEntity<?> edit(@PathVariable UUID id, OrderDTO orderDTO) {
-        ApiResult apiResult = orderService.editStatus(id, orderDTO);
+    @PostMapping("/edit_order_status/{id}/{statusId}")
+    public HttpEntity<?> edit(@PathVariable UUID id, @PathVariable UUID statusId) {
+        ApiResult apiResult = orderService.editStatus(id, statusId);
         return ResponseEntity.status(apiResult.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(apiResult);
     }
 
@@ -41,5 +41,10 @@ public class OrderController {
         ApiResult allByUserId = orderService.getAllByUserId(id);
         return ResponseEntity.status(allByUserId.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(allByUserId);
     }
+
+//    @PostMapping("/edit_status/{id}")
+//    public HttpEntity<?> editStatus(@PathVariable UUID id){
+//
+//    }
 
 }

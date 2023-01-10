@@ -1,15 +1,9 @@
 package com.example.online_shop_back.security.component;
 
-import com.example.online_shop_back.entity.OrderStatusClass;
-import com.example.online_shop_back.entity.Region;
-import com.example.online_shop_back.entity.Role;
-import com.example.online_shop_back.entity.User;
+import com.example.online_shop_back.entity.*;
 import com.example.online_shop_back.enums.OrderStatus;
 import com.example.online_shop_back.enums.RoleNameEnum;
-import com.example.online_shop_back.repository.OrderStatusRepository;
-import com.example.online_shop_back.repository.RegionRepository;
-import com.example.online_shop_back.repository.RoleRepository;
-import com.example.online_shop_back.repository.UserRepository;
+import com.example.online_shop_back.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +34,9 @@ public class DataLoader implements CommandLineRunner {
 
     @Autowired
     OrderStatusRepository orderStatusRepository;
+
+    @Autowired
+    MonthRepository monthRepository;
 
     @Value(value = "${spring.jpa.hibernate.ddl-auto}")
     private String initialMode;
@@ -97,13 +94,13 @@ public class DataLoader implements CommandLineRunner {
             regions.add(qoraqalpoq);
             regionRepository.saveAll(regions);
         }
-        if (orderStatusRepository.findAll().size()==0){
-            OrderStatusClass newOrder=new OrderStatusClass(OrderStatus.NEW);
-            OrderStatusClass accepted=new OrderStatusClass(OrderStatus.ACCEPTED);
-            OrderStatusClass inProgress=new OrderStatusClass(OrderStatus.IN_PROGRESS);
-            OrderStatusClass completed=new OrderStatusClass(OrderStatus.COMPLETED);
-            OrderStatusClass canceled=new OrderStatusClass(OrderStatus.CANCELED);
-            List<OrderStatusClass> list=new ArrayList<>();
+        if (orderStatusRepository.findAll().size() == 0) {
+            OrderStatusClass newOrder = new OrderStatusClass(OrderStatus.NEW);
+            OrderStatusClass accepted = new OrderStatusClass(OrderStatus.ACCEPTED);
+            OrderStatusClass inProgress = new OrderStatusClass(OrderStatus.IN_PROGRESS);
+            OrderStatusClass completed = new OrderStatusClass(OrderStatus.COMPLETED);
+            OrderStatusClass canceled = new OrderStatusClass(OrderStatus.CANCELED);
+            List<OrderStatusClass> list = new ArrayList<>();
             list.add(newOrder);
             list.add(accepted);
             list.add(inProgress);
@@ -117,7 +114,18 @@ public class DataLoader implements CommandLineRunner {
 //                orderStatusRepository.saveAll(list);
 //            }
         }
-
+        if (monthRepository.findAll().size() == 0) {
+            List<Month> monthList = new ArrayList<>();
+            Month three = new Month(3);
+            Month six = new Month(6);
+            Month nine = new Month(9);
+            Month twelve = new Month(12);
+            monthList.add(three);
+            monthList.add(six);
+            monthList.add(nine);
+            monthList.add(twelve);
+            monthRepository.saveAll(monthList);
+        }
 
 
     }
