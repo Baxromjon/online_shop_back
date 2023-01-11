@@ -3,9 +3,11 @@ package com.example.online_shop_back.service;
 import com.example.online_shop_back.entity.*;
 import com.example.online_shop_back.enums.OrderStatus;
 import com.example.online_shop_back.enums.PayStatus;
+import com.example.online_shop_back.enums.PaymentTypeEnum;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.OrderDTO;
 import com.example.online_shop_back.projection.ProductProjection;
+import com.example.online_shop_back.projection.ProductProjection1;
 import com.example.online_shop_back.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,12 +44,20 @@ public class OrderService {
     @Autowired
     AddressRepository addressRepository;
 
+    @Autowired
+    OrderTypeRepository orderTypeRepository;
+
+    @Autowired
+    PaymentTypeRepository paymentTypeRepository;
+
     public ApiResult add(OrderDTO orderDTO) {
         try {
             Optional<User> userOptional = userRepository.findById(orderDTO.getUserId());
             if (!userOptional.isPresent()) {
                 return new ApiResult(false, "User not found");
             }
+//            OrderType orderType = orderTypeRepository.findById(orderDTO.getOrderTypeId()).orElseThrow();
+            PaymentType paymentType = paymentTypeRepository.findById(orderDTO.getPaymentTypeId()).orElseThrow();
             String orderId = randomOrderId();
             boolean exists = orderRepository.existsByOrderId(orderId);
             if (exists) {
@@ -60,35 +70,45 @@ public class OrderService {
             order.setOrderId(orderId);
             order.setDate(new Date());
             orderRepository.save(order);
-            Month month = monthRepository.findById(orderDTO.getMonthId()).orElseThrow();
-            List<ProductProjection> allProductFromBasket = basketRepository.getAllProductFromBasket(orderDTO.getUserId(), month.getMonth());
-            List<OutputProduct> outputProducts = new ArrayList<>();
+
+            if (paymentType.getPaymentTypeEnum() == PaymentTypeEnum.INSTALLMENT_PAYMENT) {
+                Month month = monthRepository.findById(orderDTO.getMonthId()).orElseThrow();
+                List<ProductProjection> allProductFromBasket = basketRepository.getAllProductFromBasket(orderDTO.getUserId(), month.getMonth());
+                List<OutputProduct> outputProducts = new ArrayList<>();
+                double totalPrice = 0;
+                for (int i = 0; i < allProductFromBasket.size(); i++) {
+                    OutputProduct outputProduct = new OutputProduct();
+                    outputProduct.setOrder(order);
+                    outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
+                    outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
+                    outputProducts.add(outputProduct);
+                    totalPrice += allProductFromBasket.get(i).getMonthlyPrice();
+                }
+
+                outputProductRepository.saveAll(outputProducts);
+
+                double monthlyPrice = basketRepository.getMonthlyPrice(orderDTO.getUserId(), month.getMonth());
+                List<OrderMonth> orderMonths = new ArrayList<>();
+                Date date = new Date();
+                order.setTotalPrice(totalPrice * month.getMonth());
+                for (int i = 0; i < month.getMonth(); i++) {
+                    OrderMonth orderMonth = new OrderMonth();
+                    orderMonth.setOrder(order);
+                    orderMonth.setPayStatus(PayStatus.UNPAID);
+                    orderMonth.setPrice(0);
+                    orderMonth.setDeadline(new Date(date.getYear(), date.getMonth() + i, date.getDay()));
+                    orderMonths.add(orderMonth);
+                    orderMonth.setPrice(monthlyPrice);
+                }
+                orderMonthRepository.saveAll(orderMonths);
+            }
+
+            List<ProductProjection1> projection1List = basketRepository.getAllProductFromBasket(orderDTO.getUserId());
             double totalPrice = 0;
-            for (int i = 0; i < allProductFromBasket.size(); i++) {
-                OutputProduct outputProduct = new OutputProduct();
-                outputProduct.setOrder(order);
-                outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
-                outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
-                outputProducts.add(outputProduct);
-                totalPrice += allProductFromBasket.get(i).getMonthlyPrice();
+            for (int i = 0; i < projection1List.size(); i++) {
+                totalPrice += (projection1List.get(i).getTotalPrice()*projection1List.get(i).getAmount());
             }
-
-            outputProductRepository.saveAll(outputProducts);
-            List<OrderMonth> orderMonths = new ArrayList<>();
-
-            double monthlyPrice = basketRepository.getMonthlyPrice(orderDTO.getUserId(), month.getMonth());
-            order.setTotalPrice(totalPrice * month.getMonth());
-            Date date = new Date();
-            for (int i = 0; i < month.getMonth(); i++) {
-                OrderMonth orderMonth = new OrderMonth();
-                orderMonth.setOrder(order);
-                orderMonth.setPayStatus(PayStatus.UNPAID);
-                orderMonth.setPrice(0);
-                orderMonth.setDeadline(new Date(date.getYear(), date.getMonth()+i, date.getDay()));
-                orderMonths.add(orderMonth);
-                orderMonth.setPrice(monthlyPrice);
-            }
-            orderMonthRepository.saveAll(orderMonths);
+            order.setTotalPrice(totalPrice);
             orderRepository.save(order);
             basketRepository.deleteByUserId(orderDTO.getUserId());
             return new ApiResult(true, "Order successfully saved");

@@ -20,4 +20,8 @@ public class OrderDTO {
 //    private double amount;
     private UUID monthId;
 
+    private int orderTypeId;
+
+    private int paymentTypeId;
+
 }

@@ -3,6 +3,7 @@ package com.example.online_shop_back.repository;
 import com.example.online_shop_back.entity.Basket;
 import com.example.online_shop_back.entity.Product;
 import com.example.online_shop_back.projection.ProductProjection;
+import com.example.online_shop_back.projection.ProductProjection1;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -62,4 +63,11 @@ public interface BasketRepository extends JpaRepository<Basket, UUID> {
     @Query(nativeQuery = true, value = "delete from basket\n" +
             "where user_id=:userId")
     void deleteByUserId(UUID userId);
+
+
+    @Query(nativeQuery = true, value = "select p.total_price as totalPrice, b.amount as amount, p.name as name, p.discount_percent as discountPercent\n" +
+            "from product p\n" +
+            "         inner join basket b on p.id = b.product_id\n" +
+            "where b.user_id = :userId")
+    List<ProductProjection1> getAllProductFromBasket(UUID userId);
 }
