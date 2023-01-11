@@ -2,6 +2,8 @@ package com.example.online_shop_back.security.component;
 
 import com.example.online_shop_back.entity.*;
 import com.example.online_shop_back.enums.OrderStatus;
+import com.example.online_shop_back.enums.OrderTypeEnum;
+import com.example.online_shop_back.enums.PaymentTypeEnum;
 import com.example.online_shop_back.enums.RoleNameEnum;
 import com.example.online_shop_back.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,12 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     MonthRepository monthRepository;
 
+    @Autowired
+    OrderTypeRepository orderTypeRepository;
+
+    @Autowired
+    PaymentTypeRepository paymentTypeRepository;
+
     @Value(value = "${spring.jpa.hibernate.ddl-auto}")
     private String initialMode;
 
@@ -47,9 +55,11 @@ public class DataLoader implements CommandLineRunner {
 
             Role adminRole = new Role(RoleNameEnum.ROLE_ADMIN);
             Role userRole = new Role(RoleNameEnum.ROLE_USER);
+            Role moderator = new Role(RoleNameEnum.ROLE_MODERATOR);
             List<Role> roles = new ArrayList<>();
             roles.add(adminRole);
             roles.add(userRole);
+            roles.add(moderator);
             roleRepository.saveAll(roles);
         }
         if (userRepository.findAll().size() == 0) {
@@ -125,6 +135,22 @@ public class DataLoader implements CommandLineRunner {
             monthList.add(nine);
             monthList.add(twelve);
             monthRepository.saveAll(monthList);
+        }
+        if (orderTypeRepository.findAll().size() == 0) {
+            OrderType delivery = new OrderType(1, OrderTypeEnum.DELIVERY);
+            OrderType pickup = new OrderType(2, OrderTypeEnum.PICKUP);
+            List<OrderType> list = new ArrayList<>();
+            list.add(delivery);
+            list.add(pickup);
+            orderTypeRepository.saveAll(list);
+        }
+        if (paymentTypeRepository.findAll().size() == 0) {
+            PaymentType paymentType = new PaymentType(1, PaymentTypeEnum.INSTALLMENT_PAYMENT);
+            PaymentType paymentType1 = new PaymentType(2, PaymentTypeEnum.FULL);
+            List<PaymentType> list = new ArrayList<>();
+            list.add(paymentType);
+            list.add(paymentType1);
+            paymentTypeRepository.saveAll(list);
         }
 
 

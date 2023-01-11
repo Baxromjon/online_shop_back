@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,11 +16,13 @@ public class PaymentController {
     @Autowired
     PaymentService paymentService;
 
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PostMapping("/add_payment")
     public HttpEntity<?> addPayment(@RequestBody PaymentDTO paymentDTO) {
         ApiResult add = paymentService.add(paymentDTO);
         return ResponseEntity.status(add.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(add);
     }
 
+//    @GetMapping
 
 }

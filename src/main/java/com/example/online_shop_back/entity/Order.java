@@ -48,4 +48,6 @@ public class Order extends AbsEntity {
 
     @Column(unique = true, length = 10)
     private String orderId;
+
+
 }

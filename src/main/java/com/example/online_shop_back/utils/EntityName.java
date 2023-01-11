@@ -4,10 +4,16 @@ public interface EntityName {
     String USERS = "users";
     String ROLE = "role";
 
+    String ORDER_TYPE = "order_type";
+
+    String PAYMENT_TYPE = "payment_type";
+
     String CATEGORY="category";
     String REGION="region";
 
     String ADDRESS="address";
+
+    String DELIVERY_ADDRESS="delivery_address";
 
     String MONTHLY_PRICE="monthly_price";
 
