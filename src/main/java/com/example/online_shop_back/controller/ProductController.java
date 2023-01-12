@@ -43,20 +43,27 @@ public class ProductController {
     }
 
     @GetMapping("/get_all_by_category/{id}")
-    public HttpEntity<?> getAllByCategory(@PathVariable UUID id){
+    public HttpEntity<?> getAllByCategory(@PathVariable UUID id) {
         ApiResult allByCategory = productService.getAllByCategory(id);
-        return ResponseEntity.status(allByCategory.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allByCategory);
+        return ResponseEntity.status(allByCategory.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(allByCategory);
     }
 
     @GetMapping("/get_all_by_flash")
-    public HttpEntity<?> getAllByFlash(){
+    public HttpEntity<?> getAllByFlash() {
         ApiResult allByFlash = productService.getAllByFlash();
-        return ResponseEntity.status(allByFlash.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allByFlash);
+        return ResponseEntity.status(allByFlash.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(allByFlash);
     }
+
     @GetMapping("/get_all_by_carousel")
-    public HttpEntity<?> getAllByCarousel(){
+    public HttpEntity<?> getAllByCarousel() {
         ApiResult allByFlash = productService.getAllByCarousel();
-        return ResponseEntity.status(allByFlash.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allByFlash);
+        return ResponseEntity.status(allByFlash.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(allByFlash);
+    }
+
+    @PostMapping("/edit_main_photo/{productId}/{photoId}")
+    public HttpEntity<?> editMainPhoto(@PathVariable UUID productId, @PathVariable UUID photoId) {
+        ApiResult apiResult = productService.editMainPhoto(productId, photoId);
+        return ResponseEntity.status(apiResult.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(apiResult);
     }
 
 

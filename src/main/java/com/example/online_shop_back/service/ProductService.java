@@ -177,4 +177,24 @@ public class ProductService {
             return new ApiResult(false, "Error in get all Products by Carousel");
         }
     }
+
+    public ApiResult editMainPhoto(UUID productId, UUID photoId) {
+        try {
+            Optional<Product> productOptional = productRepository.findById(productId);
+            if (!productOptional.isPresent()) {
+                return new ApiResult(false, "Product not found");
+            }
+            Optional<Attachment> attachmentOptional = attachmentRepository.findById(photoId);
+            if (!attachmentOptional.isPresent()) {
+                return new ApiResult(false, "Photo not found");
+            }
+            Product product = productOptional.get();
+            product.setMainPhoto(attachmentOptional.get());
+            productRepository.save(product);
+            return new ApiResult(true, "Successfully edited");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error");
+        }
+    }
 }
