@@ -28,7 +28,7 @@ public class CategoryService {
             if (categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category allready exists");
             }
-            Attachment attachment = attachmentRepository.findById(categoryDTO.getCategoryId()).orElseThrow();
+            Attachment attachment = attachmentRepository.findById(categoryDTO.getPhotoId()).orElseThrow();
             Category category = new Category();
             category.setName(categoryDTO.getName());
             category.setIndex(categoryDTO.getIndex());
