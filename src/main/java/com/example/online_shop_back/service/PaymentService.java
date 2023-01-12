@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class PaymentService {
@@ -70,6 +71,27 @@ public class PaymentService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in payment");
+        }
+    }
+
+    public ApiResult addFullPayment(PaymentDTO paymentDTO) {
+        try {
+            PayType payType = payTypeRepository.findById(paymentDTO.getPayTypeId()).orElseThrow();
+            Optional<User> userOptional = userRepository.findById(paymentDTO.getUserId());
+            Order order = orderRepository.findByOrderId(paymentDTO.getOrderId());
+            Payment payment = new Payment(
+                    userOptional.get(),
+                    payType,
+                    paymentDTO.getAmount(),
+                    new Date(),
+                    paymentDTO.getDescription(),
+                    Collections.singletonList(order)
+            );
+            paymentRepository.save(payment);
+            return new ApiResult(true, "Successfully add full payment");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in full payment");
         }
     }
 }

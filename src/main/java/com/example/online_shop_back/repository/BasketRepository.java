@@ -65,7 +65,11 @@ public interface BasketRepository extends JpaRepository<Basket, UUID> {
     void deleteByUserId(UUID userId);
 
 
-    @Query(nativeQuery = true, value = "select p.total_price as totalPrice, b.amount as amount, p.name as name, p.discount_percent as discountPercent\n" +
+    @Query(nativeQuery = true, value = "select p.total_price         as totalPrice,\n" +
+            "       b.amount              as amount,\n" +
+            "       p.name                as name,\n" +
+            "       p.discount_percent    as discountPercent,\n" +
+            "       cast(p.id as varchar) as productId\n" +
             "from product p\n" +
             "         inner join basket b on p.id = b.product_id\n" +
             "where b.user_id = :userId")

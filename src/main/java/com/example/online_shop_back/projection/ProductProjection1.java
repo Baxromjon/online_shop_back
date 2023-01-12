@@ -1,5 +1,7 @@
 package com.example.online_shop_back.projection;
 
+import java.util.UUID;
+
 public interface ProductProjection1 {
     double getTotalPrice();
 
@@ -8,4 +10,6 @@ public interface ProductProjection1 {
     String getName();
 
     double getDiscountPercent();
+
+    UUID getProductId();
 }

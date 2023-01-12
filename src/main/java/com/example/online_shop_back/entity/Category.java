@@ -32,4 +32,7 @@ public class Category extends AbsEntity {
 
     @ManyToOne
     private Category category;
+
+    @ManyToOne
+    private Attachment attachment;
 }

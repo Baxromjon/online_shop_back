@@ -2,10 +2,12 @@ package com.example.online_shop_back.service;
 
 import com.example.online_shop_back.entity.*;
 import com.example.online_shop_back.enums.OrderStatus;
+import com.example.online_shop_back.enums.OrderTypeEnum;
 import com.example.online_shop_back.enums.PayStatus;
 import com.example.online_shop_back.enums.PaymentTypeEnum;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.OrderDTO;
+import com.example.online_shop_back.payload.PaymentDTO;
 import com.example.online_shop_back.projection.ProductProjection;
 import com.example.online_shop_back.projection.ProductProjection1;
 import com.example.online_shop_back.repository.*;
@@ -50,14 +52,27 @@ public class OrderService {
     @Autowired
     PaymentTypeRepository paymentTypeRepository;
 
+    @Autowired
+    DeliveryAddressRepository deliveryAddressRepository;
+
+    @Autowired
+    PayTypeRepository payTypeRepository;
+
+    @Autowired
+    PaymentService paymentService;
+
+    @Autowired
+    RegionRepository regionRepository;
+
     public ApiResult add(OrderDTO orderDTO) {
         try {
             Optional<User> userOptional = userRepository.findById(orderDTO.getUserId());
             if (!userOptional.isPresent()) {
                 return new ApiResult(false, "User not found");
             }
-//            OrderType orderType = orderTypeRepository.findById(orderDTO.getOrderTypeId()).orElseThrow();
+            OrderType orderType = orderTypeRepository.findById(orderDTO.getOrderTypeId()).orElseThrow();
             PaymentType paymentType = paymentTypeRepository.findById(orderDTO.getPaymentTypeId()).orElseThrow();
+            PayType payType = payTypeRepository.findById(orderDTO.getPayTypeId()).orElseThrow();
             String orderId = randomOrderId();
             boolean exists = orderRepository.existsByOrderId(orderId);
             if (exists) {
@@ -69,6 +84,8 @@ public class OrderService {
             order.setUser(userOptional.get());
             order.setOrderId(orderId);
             order.setDate(new Date());
+            order.setPaymentType(paymentType);
+            order.setOrderType(orderType);
             orderRepository.save(order);
 
             if (paymentType.getPaymentTypeEnum() == PaymentTypeEnum.INSTALLMENT_PAYMENT) {
@@ -101,12 +118,62 @@ public class OrderService {
                     orderMonth.setPrice(monthlyPrice);
                 }
                 orderMonthRepository.saveAll(orderMonths);
+            } else if (paymentType.getPaymentTypeEnum() == PaymentTypeEnum.FULL) {
+                List<ProductProjection1> allProductFromBasket = basketRepository.getAllProductFromBasket(orderDTO.getUserId());
+                List<OutputProduct> outputProducts = new ArrayList<>();
+                double totalPrice = 0;
+                for (int i = 0; i < allProductFromBasket.size(); i++) {
+                    OutputProduct outputProduct = new OutputProduct();
+                    outputProduct.setOrder(order);
+                    outputProduct.setProduct(productRepository.findById(allProductFromBasket.get(i).getProductId()).orElseThrow());
+                    outputProduct.setAmount(allProductFromBasket.get(i).getAmount());
+                    outputProducts.add(outputProduct);
+                    totalPrice += allProductFromBasket.get(i).getTotalPrice();
+                }
+                order.setTotalPrice(totalPrice);
+                orderRepository.save(order);
+                outputProductRepository.saveAll(outputProducts);
+
+                PaymentDTO paymentDTO = new PaymentDTO(
+                        userOptional.get().getId(),
+                        orderDTO.getPayTypeId(),
+                        totalPrice,
+                        "to`liq to`lov",
+                        order.getOrderId()
+                );
+                ApiResult add = paymentService.addFullPayment(paymentDTO);
+                if (add.getSuccess()) {
+                    order.setOrderStatus(OrderStatus.PAID.toString());
+                    if (orderType.getOrderTypeEnum() == OrderTypeEnum.DELIVERY) {
+                        DeliveryAddress deliveryAddress = new DeliveryAddress();
+                        deliveryAddress.setOrder(order);
+                        deliveryAddress.setFullName(userOptional.get().getFirstName() + " " + userOptional.get().getLastName());
+                        deliveryAddress.setPhoneNumber(userOptional.get().getPhoneNumber());
+                        if (orderDTO.getAddressId() != null) {
+                            Address address = addressRepository.findById(orderDTO.getAddressId()).orElseThrow();
+                            deliveryAddress.setRegion(address.getRegion());
+                            deliveryAddress.setDistrict(address.getDistrict());
+                            deliveryAddress.setHome(address.getHome());
+                            deliveryAddress.setStreet(address.getStreet());
+                            deliveryAddress.setAddress(address.getAddress());
+                        } else {
+                            Region region = regionRepository.findById(orderDTO.getRegionId()).orElseThrow();
+                            deliveryAddress.setAddress(orderDTO.getAddress());
+                            deliveryAddress.setRegion(region);
+                            deliveryAddress.setDistrict(orderDTO.getDistrict());
+                            deliveryAddress.setHome(orderDTO.getHome());
+                            deliveryAddress.setStreet(orderDTO.getStreet());
+                        }
+                        deliveryAddressRepository.save(deliveryAddress);
+                    }
+                }
             }
+
 
             List<ProductProjection1> projection1List = basketRepository.getAllProductFromBasket(orderDTO.getUserId());
             double totalPrice = 0;
             for (int i = 0; i < projection1List.size(); i++) {
-                totalPrice += (projection1List.get(i).getTotalPrice()*projection1List.get(i).getAmount());
+                totalPrice += (projection1List.get(i).getTotalPrice() * projection1List.get(i).getAmount());
             }
             order.setTotalPrice(totalPrice);
             orderRepository.save(order);

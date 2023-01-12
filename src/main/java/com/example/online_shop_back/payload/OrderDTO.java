@@ -24,4 +24,19 @@ public class OrderDTO {
 
     private int paymentTypeId;
 
+    private UUID payTypeId;
+
+    private UUID addressId;
+
+    private UUID regionId;
+
+    private String district;
+
+    private String home;
+
+    private String street;
+
+    private String address;
+
+
 }

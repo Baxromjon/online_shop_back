@@ -1,8 +1,10 @@
 package com.example.online_shop_back.service;
 
+import com.example.online_shop_back.entity.Attachment;
 import com.example.online_shop_back.entity.Category;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.CategoryDTO;
+import com.example.online_shop_back.repository.AttachmentRepository;
 import com.example.online_shop_back.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,9 @@ public class CategoryService {
     @Autowired
     CategoryRepository categoryRepository;
 
+    @Autowired
+    AttachmentRepository attachmentRepository;
+
     public ApiResult addCategory(CategoryDTO categoryDTO) {
         try {
             Optional<Category> categoryOptional = categoryRepository.findByName(categoryDTO.getName());
@@ -23,9 +28,11 @@ public class CategoryService {
             if (categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category allready exists");
             }
+            Attachment attachment = attachmentRepository.findById(categoryDTO.getCategoryId()).orElseThrow();
             Category category = new Category();
             category.setName(categoryDTO.getName());
             category.setIndex(categoryDTO.getIndex());
+            category.setAttachment(attachment);
             if (categoryDTO.getCategoryId() != null) {
                 category.setCategory(categoryRepository.findById(categoryDTO.getCategoryId()).orElseGet(Category::new));
             }
