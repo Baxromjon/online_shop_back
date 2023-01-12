@@ -118,7 +118,30 @@ public class OrderService {
                     orderMonth.setPrice(monthlyPrice);
                 }
                 orderMonthRepository.saveAll(orderMonths);
-            } else if (paymentType.getPaymentTypeEnum() == PaymentTypeEnum.FULL) {
+                if (orderType.getOrderTypeEnum() == OrderTypeEnum.DELIVERY) {
+                    DeliveryAddress deliveryAddress = new DeliveryAddress();
+                    deliveryAddress.setOrder(order);
+                    deliveryAddress.setFullName(userOptional.get().getFirstName() + " " + userOptional.get().getLastName());
+                    deliveryAddress.setPhoneNumber(userOptional.get().getPhoneNumber());
+                    if (orderDTO.getAddressId() != null) {
+                        Address address = addressRepository.findById(orderDTO.getAddressId()).orElseThrow();
+                        deliveryAddress.setRegion(address.getRegion());
+                        deliveryAddress.setDistrict(address.getDistrict());
+                        deliveryAddress.setHome(address.getHome());
+                        deliveryAddress.setStreet(address.getStreet());
+                        deliveryAddress.setAddress(address.getAddress());
+                    } else {
+                        Region region = regionRepository.findById(orderDTO.getRegionId()).orElseThrow();
+                        deliveryAddress.setAddress(orderDTO.getAddress());
+                        deliveryAddress.setRegion(region);
+                        deliveryAddress.setDistrict(orderDTO.getDistrict());
+                        deliveryAddress.setHome(orderDTO.getHome());
+                        deliveryAddress.setStreet(orderDTO.getStreet());
+                    }
+                    deliveryAddressRepository.save(deliveryAddress);
+                }
+            }
+            else if (paymentType.getPaymentTypeEnum() == PaymentTypeEnum.FULL) {
                 List<ProductProjection1> allProductFromBasket = basketRepository.getAllProductFromBasket(orderDTO.getUserId());
                 List<OutputProduct> outputProducts = new ArrayList<>();
                 double totalPrice = 0;
@@ -170,12 +193,12 @@ public class OrderService {
             }
 
 
-            List<ProductProjection1> projection1List = basketRepository.getAllProductFromBasket(orderDTO.getUserId());
-            double totalPrice = 0;
-            for (int i = 0; i < projection1List.size(); i++) {
-                totalPrice += (projection1List.get(i).getTotalPrice() * projection1List.get(i).getAmount());
-            }
-            order.setTotalPrice(totalPrice);
+//            List<ProductProjection1> projection1List = basketRepository.getAllProductFromBasket(orderDTO.getUserId());
+//            double totalPrice = 0;
+//            for (int i = 0; i < projection1List.size(); i++) {
+//                totalPrice += (projection1List.get(i).getTotalPrice() * projection1List.get(i).getAmount());
+//            }
+//            order.setTotalPrice(totalPrice);
             orderRepository.save(order);
             basketRepository.deleteByUserId(orderDTO.getUserId());
             return new ApiResult(true, "Order successfully saved");

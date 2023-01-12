@@ -74,4 +74,7 @@ public interface BasketRepository extends JpaRepository<Basket, UUID> {
             "         inner join basket b on p.id = b.product_id\n" +
             "where b.user_id = :userId")
     List<ProductProjection1> getAllProductFromBasket(UUID userId);
+
+    boolean existsByProduct(Product product);
+
 }

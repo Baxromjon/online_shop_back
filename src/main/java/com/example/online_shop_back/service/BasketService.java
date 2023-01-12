@@ -35,11 +35,18 @@ public class BasketService {
             if (!productOptional.isPresent()) {
                 return new ApiResult(false, "Product not found");
             }
-            Basket basket = new Basket(
-                    productOptional.get(),
-                    userOptional.get(),
-                    basketDTO.getAmount());
-            basketRepository.save(basket);
+            Optional<Basket> basketOptional = basketRepository.findByProduct(productOptional.get());
+            if (basketOptional.isPresent()) {
+                Basket basket1 = basketOptional.get();
+                basket1.setAmount(basket1.getAmount() + 1);
+                basketRepository.save(basket1);
+            } else {
+                Basket basket = new Basket();
+                basket.setProduct(productOptional.get());
+                basket.setUser(userOptional.get());
+                basket.setAmount(basketDTO.getAmount());
+                basketRepository.save(basket);
+            }
             return new ApiResult(true, "Product successfully added to Basket");
         } catch (Exception e) {
             e.printStackTrace();
