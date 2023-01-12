@@ -74,5 +74,8 @@ public class Product extends AbsEntity {
             inverseJoinColumns = {@JoinColumn(name = "photo_id")})
     private List<Attachment> photo;
 
+    @ManyToOne
+    private Attachment mainPhoto;
+
 
 }

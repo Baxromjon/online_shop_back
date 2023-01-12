@@ -79,6 +79,7 @@ public class ProductService {
             product.setTotalPrice(productDTO.getDiscountPercent() > 0 ?
                     productDTO.getPrice() - (productDTO.getPrice() * productDTO.getDiscountPercent() / 100) : productDTO.getPrice()
             );
+            product.setMainPhoto(attachmentList.get(0));
 
             productRepository.save(product);
             return new ApiResult(true, "Product successfully saved");
