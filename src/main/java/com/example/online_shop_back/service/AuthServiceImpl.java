@@ -38,6 +38,11 @@ public class AuthServiceImpl implements AuthService, UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException(phoneNumber));
     }
 
+
+    public UserDetails loadUserByUserId(String userId) throws UsernameNotFoundException {
+        return userRepository.findById(UUID.fromString(userId)).orElseThrow(() -> new UsernameNotFoundException("userId"));
+    }
+
     @Override
     public ApiResult register(RegisterDTO registerDTO) {
             Set<Role> role = roleRepository.findByName(RoleNameEnum.ROLE_USER);

@@ -59,7 +59,7 @@ public class AuthController {
                     ));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             User user = (User) authentication.getPrincipal();
-            String token = jwtTokenProvider.generateAccessToken(user, new Timestamp(System.currentTimeMillis()));
+            String token = jwtTokenProvider.generateToken(user.getId());
             return ResponseEntity.status(200).body(new ApiResult<>(token, true, "Successfully"));
         } catch (Exception exception) {
             exception.printStackTrace();

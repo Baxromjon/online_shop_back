@@ -2,6 +2,7 @@ package com.example.online_shop_back.security;
 
 
 import com.example.online_shop_back.entity.User;
+import com.example.online_shop_back.repository.AuthService;
 import com.example.online_shop_back.repository.UserRepository;
 import com.example.online_shop_back.utils.AppConstant;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,87 +23,76 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Optional;
 import java.util.UUID;
 
-@Slf4j
-@RequiredArgsConstructor
-@Component
+//@Slf4j
+//@RequiredArgsConstructor
+//@Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    UserRepository userRepository;
+    @Autowired
+    AuthService authService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
 
     @Override
-    protected void doFilterInternal(@NotNull HttpServletRequest httpServletRequest,
-                                    @NotNull HttpServletResponse httpServletResponse,
-                                    @NotNull FilterChain filterChain) throws ServletException, IOException {
-
-        log.info("httpServletRequest {}", httpServletRequest);
-
-        try {
-            setUserPrincipalIfAllOk(httpServletRequest);
-        } catch (Exception e) {
-            e.printStackTrace();
+    protected void doFilterInternal(HttpServletRequest httpServletRequest,
+                                    HttpServletResponse httpServletResponse,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        //O'ZIMIZ YOZGAN METHOD. MAQSAD USER(USERDETAILS) NI OLISH
+        UserDetails userDetails = getUserDetails(httpServletRequest);
+        //BEARE TOKEN YOKI BASIC TOKEN ORQALI TEKSHIRILIB OLINGAN USER
+        if (userDetails != null) {
+            if (userDetails.isEnabled()
+                    && userDetails.isAccountNonExpired()
+                    && userDetails.isAccountNonLocked()
+                    && userDetails.isCredentialsNonExpired()) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                        userDetails,
+                        null,
+                        userDetails.getAuthorities());
+//                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
-
         filterChain.doFilter(httpServletRequest, httpServletResponse);
     }
 
-    private void setUserPrincipalIfAllOk(HttpServletRequest request) {
-        String authorization = request.getHeader(AppConstant.AUTHORIZATION_HEADER);
-
-        log.info("authorization {}", authorization);
-
-        if (authorization != null) {
-            User user = null;
-            if (authorization.startsWith("Bearer ")) {
-                user = getUserFromBearerToken(authorization);
-            } else if (authorization.startsWith("Basic ")) {
-                user = getUserFromBasicToken(authorization);
-            }
-            if (user != null) {
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-        }
-    }
-
-    public User getUserFromBasicToken(String token) {
-        log.info("token {}", token);
-        token = token.substring("Basic".length()).trim();
-        log.info("token {}", token);
-        byte[] decode = Base64.getDecoder().decode(token);
-        token = new String(decode, Charset.defaultCharset());
-        String[] split = token.split(":", 2);
-        log.info("token {}", token);
-        log.info("split[0] {}", split[0]);
-
-        Optional<User> optionalUser = userRepository.findFirstByPhoneNumberAndEnabledIsTrueAndAccountNonExpiredIsTrueAndCredentialsNonExpiredIsTrueAndAccountNonLockedIsTrue(split[0]);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            log.info("user {}", user);
-            if (passwordEncoder.matches(split[1], user.getPassword()))
-                return optionalUser.get();
-        }
-        return null;
-    }
-
-    public User getUserFromBearerToken(String token) {
+    public UserDetails getUserDetails(HttpServletRequest httpServletRequest) {
         try {
+            String tokenClient = httpServletRequest.getHeader("Authorization");
+            if (tokenClient != null) {
+                if (tokenClient.startsWith("Bearer ")) {
+                    tokenClient = tokenClient.substring(7);
+                    if (jwtTokenProvider.validateToken(tokenClient)) {
+                        String userIdFromToken = jwtTokenProvider.getUserIdFromToken(tokenClient);
+                        return authService.loadUserByUserId(userIdFromToken);
+                    } else if (tokenClient.startsWith("Basic ")) {
+                        String[] userUserNameAndPassword = getUserNameAndPassword(tokenClient);
+                        UserDetails userDetails = authService.loadUserByUsername(userUserNameAndPassword[0]);
+                        if (userDetails != null && passwordEncoder.matches(userUserNameAndPassword[1], userDetails.getPassword()))
+                            return userDetails;
+                    }
 
-            token = token.substring("Bearer".length()).trim();
-            if (jwtTokenProvider.validToken(token, true)) {
-                String userId = jwtTokenProvider.getUserIdFromToken(token, true);
-
-                return userRepository.findById(UUID.fromString(userId)).orElse(null);
+                }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         return null;
+    }
+
+    public String[] getUserNameAndPassword(String token) {
+        String base64Credentials = token.substring("Basic".length()).trim();
+        byte[] credDecoded = Base64.getDecoder().decode(base64Credentials);
+        String credentials = new String(credDecoded, StandardCharsets.UTF_8);
+        return credentials.split(":", 2);
     }
 
 }
