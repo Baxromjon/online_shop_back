@@ -64,7 +64,7 @@ public class OrderService {
     @Autowired
     RegionRepository regionRepository;
 
-    public ApiResult add(OrderDTO orderDTO) {
+    public ApiResult add(OrderDTO orderDTO, User user) {
         try {
             Optional<User> userOptional = userRepository.findById(orderDTO.getUserId());
             if (!userOptional.isPresent()) {

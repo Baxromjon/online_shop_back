@@ -86,4 +86,14 @@ public class UserService {
             return new ApiResult(false, "Error in add role to User");
         }
     }
+
+    public ApiResult getAllUser() {
+        try {
+            List<User> all = userRepository.findAll();
+            return new ApiResult(all, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get all User");
+        }
+    }
 }

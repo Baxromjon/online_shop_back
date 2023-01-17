@@ -1,13 +1,16 @@
 package com.example.online_shop_back.controller;
 
+import com.example.online_shop_back.entity.User;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.OrderDTO;
 import com.example.online_shop_back.payload.OutputProductDTO;
 import com.example.online_shop_back.service.OrderService;
+import com.example.online_shop_back.utils.CurrentUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -18,9 +21,10 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping("/add_order")
-    public HttpEntity<?> add(@RequestBody OrderDTO orderDTO) {
-        ApiResult add = orderService.add(orderDTO);
+    public HttpEntity<?> add(@RequestBody OrderDTO orderDTO, @CurrentUser User user) {
+        ApiResult add = orderService.add(orderDTO, user);
         return ResponseEntity.status(add.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(add);
     }
 

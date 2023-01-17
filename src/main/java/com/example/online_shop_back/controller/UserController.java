@@ -51,4 +51,10 @@ public class UserController {
         ApiResult apiResult = userService.addRoleToUser(id, roleId);
         return ResponseEntity.status(apiResult.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(apiResult);
     }
+
+    @GetMapping("/get_all_user")
+    public HttpEntity<?> getAllUser(){
+        ApiResult allUser = userService.getAllUser();
+        return ResponseEntity.status(allUser.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(allUser);
+    }
 }
