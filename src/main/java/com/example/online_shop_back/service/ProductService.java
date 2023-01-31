@@ -43,14 +43,14 @@ public class ProductService {
             Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
             Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
             List<Attachment> attachmentList = attachmentRepository.findAllById(productDTO.getPhotoId());
-            Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
+            List<Detail> detailList = detailRepository.findAllById(productDTO.getDetailId());
             if (!categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category not found");
             }
             if (!measurementOptional.isPresent()) {
                 return new ApiResult(false, "measurement not found");
             }
-            if (!detailOptional.isPresent()) {
+            if (detailList.isEmpty()) {
                 return new ApiResult<>(false, "Detail not found");
             }
             Optional<Product> optional = productRepository.findByNameAndCategoryAndMeasurement(productDTO.getName(), categoryOptional.get(), measurementOptional.get());
@@ -70,9 +70,9 @@ public class ProductService {
             product.setDiscountPercent(productDTO.getDiscountPercent());
             product.setDescription(productDTO.getDescription());
             product.setWarrantyMonth(productDTO.getWarrantyMonth());
-            product.setDetail(detailOptional.get());
+            product.setDetail(detailList);
             product.setPhoto(attachmentList);
-            product.setActive(productDTO.isActive());
+            product.setActive(true);
             product.setBrand(brandOptional.get());
             product.setFlash(productDTO.isFlash());
             product.setCarousel(productDTO.isCarousel());
@@ -94,14 +94,14 @@ public class ProductService {
         if (productOptional.isPresent()) {
             Optional<Category> categoryOptional = categoryRepository.findById(productDTO.getCategoryId());
             Optional<Measurement> measurementOptional = measurementRepository.findById(productDTO.getMeasurementId());
-            Optional<Detail> detailOptional = detailRepository.findById(productDTO.getDetailId());
+            List<Detail> detailList = detailRepository.findAllById(productDTO.getDetailId());
             if (!categoryOptional.isPresent()) {
                 return new ApiResult(false, "Category not found");
             }
             if (!measurementOptional.isPresent()) {
                 return new ApiResult(false, "measurement not found");
             }
-            if (!detailOptional.isPresent()) {
+            if (!detailList.isEmpty()) {
                 return new ApiResult<>(false, "Detail not found");
             }
             Optional<Brand> brandOptional = brandRepository.findById(productDTO.getBrandId());
@@ -110,7 +110,7 @@ public class ProductService {
             }
             Product product = productOptional.get();
             product.setCategory(categoryOptional.get());
-            product.setDetail(detailOptional.get());
+            product.setDetail(detailList);
             product.setName(product.getName());
             product.setPrice(productDTO.getPrice());
             product.setDescription(productDTO.getDescription());

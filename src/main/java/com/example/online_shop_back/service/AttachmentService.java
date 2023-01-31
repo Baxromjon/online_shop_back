@@ -12,10 +12,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,5 +65,22 @@ public class AttachmentService {
 
     public List<?> getAllFile() {
         return attachmentRepository.findAll();
+    }
+    public UUID uploadFileMultiple(MultipartFile file){
+        try {
+            assert file != null;
+            Attachment attachment = attachmentRepository.save(new Attachment(
+                    file.getOriginalFilename(), file.getSize(), file.getContentType()
+            ));
+            try {
+                attachmentContentRepository.save(new AttachmentContent(attachment, file.getBytes()));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return attachment.getId();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

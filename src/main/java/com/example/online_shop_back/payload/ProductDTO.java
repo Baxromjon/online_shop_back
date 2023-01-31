@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -21,7 +22,7 @@ public class ProductDTO {
     private List<UUID> photoId;
 //    private UUID monthlyPriceId;
     private int warrantyMonth;
-    private UUID detailId;
+    private List<UUID> detailId;
     private double price;
     private boolean active;
     private UUID brandId;

@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.annotation.MultipartConfig;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,6 +26,15 @@ public class AttachmentController {
     public HttpEntity<?> addPhoto(MultipartHttpServletRequest request) {
         UUID uuid = attachmentService.uploadFile(request);
         return ResponseEntity.ok(uuid);
+    }
+
+    @PostMapping("/multi-upload")
+    public ResponseEntity multipleUpload(@RequestParam("files")MultipartFile[] files){
+        List<Object> fileDownloadUrls=new ArrayList<>();
+        Arrays.asList(files)
+                .stream()
+                .forEach(file -> fileDownloadUrls.add(attachmentService.uploadFileMultiple(file)));
+        return ResponseEntity.ok(fileDownloadUrls);
     }
 
 

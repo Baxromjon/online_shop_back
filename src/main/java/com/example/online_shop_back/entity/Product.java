@@ -12,6 +12,7 @@ import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 
 @Data
@@ -54,8 +55,8 @@ public class Product extends AbsEntity {
 
     private boolean carousel; //HOME PAGEDA CAROUSELGA QO`YISH UCHUN
 
-    @ManyToOne
-    private Detail detail;
+    @ManyToMany
+    private List<Detail> detail;
 
     private boolean active;
 
