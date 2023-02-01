@@ -18,7 +18,7 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-//    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    //    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping("/add_category")
     public HttpEntity<?> addCategory(@RequestBody CategoryDTO categoryDTO) {
         ApiResult apiResult = categoryService.addCategory(categoryDTO);
@@ -32,8 +32,14 @@ public class CategoryController {
     }
 
     @GetMapping("/get_all_category")
-    public HttpEntity<?> getAll(){
+    public HttpEntity<?> getAll() {
         ApiResult all = categoryService.getAll();
-        return ResponseEntity.status(all.getSuccess()?HttpStatus.OK:HttpStatus.CONFLICT).body(all);
+        return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
+    }
+
+    @DeleteMapping("/delete_category/{categoryId}")
+    public HttpEntity<?> delete(@PathVariable UUID categoryId) {
+        ApiResult delete = categoryService.delete(categoryId);
+        return ResponseEntity.status(delete.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(delete);
     }
 }

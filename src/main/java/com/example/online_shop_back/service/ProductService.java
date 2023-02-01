@@ -101,7 +101,7 @@ public class ProductService {
             if (!measurementOptional.isPresent()) {
                 return new ApiResult(false, "measurement not found");
             }
-            if (!detailList.isEmpty()) {
+            if (detailList.isEmpty()) {
                 return new ApiResult<>(false, "Detail not found");
             }
             Optional<Brand> brandOptional = brandRepository.findById(productDTO.getBrandId());
@@ -111,7 +111,7 @@ public class ProductService {
             Product product = productOptional.get();
             product.setCategory(categoryOptional.get());
             product.setDetail(detailList);
-            product.setName(product.getName());
+            product.setName(productDTO.getName());
             product.setPrice(productDTO.getPrice());
             product.setDescription(productDTO.getDescription());
             product.setMeasurement(measurementOptional.get());

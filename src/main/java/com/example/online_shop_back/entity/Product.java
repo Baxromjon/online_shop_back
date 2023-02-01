@@ -2,9 +2,7 @@ package com.example.online_shop_back.entity;
 
 import com.example.online_shop_back.entity.template.AbsEntity;
 import com.example.online_shop_back.utils.EntityName;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.SQLDelete;
@@ -15,7 +13,8 @@ import java.util.List;
 import java.util.Set;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @DynamicInsert
@@ -56,6 +55,9 @@ public class Product extends AbsEntity {
     private boolean carousel; //HOME PAGEDA CAROUSELGA QO`YISH UCHUN
 
     @ManyToMany
+    @JoinTable(name = "product_detail",
+            joinColumns = {@JoinColumn(name = "product_id")},
+            inverseJoinColumns = {@JoinColumn(name = "detail_id")})
     private List<Detail> detail;
 
     private boolean active;

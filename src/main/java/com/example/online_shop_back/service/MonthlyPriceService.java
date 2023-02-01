@@ -5,6 +5,7 @@ import com.example.online_shop_back.entity.MonthlyPrice;
 import com.example.online_shop_back.entity.Product;
 import com.example.online_shop_back.payload.ApiResult;
 import com.example.online_shop_back.payload.MonthlyPriceDTO;
+import com.example.online_shop_back.projection.ProductProjection2;
 import com.example.online_shop_back.repository.MonthRepository;
 import com.example.online_shop_back.repository.MonthlyPriceRepository;
 import com.example.online_shop_back.repository.ProductRepository;
@@ -35,6 +36,10 @@ public class MonthlyPriceService {
             Optional<Product> optionalProduct = productRepository.findById(monthDTO.getProductId());
             if (!optional.isPresent()) {
                 return new ApiResult(false, "This product not found");
+            }
+            boolean exists = monthlyPriceRepository.existsByProductAndMonth(optionalProduct.get(), optional.get());
+            if (exists){
+                return new ApiResult(false, "This price allready exists");
             }
             MonthlyPrice monthlyPrice = new MonthlyPrice();
             monthlyPrice.setMonth(optional.get());
@@ -84,6 +89,16 @@ public class MonthlyPriceService {
         } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get all Monthly Price");
+        }
+    }
+
+    public ApiResult getAllProductByMonthlyPrice(UUID productId) {
+        try {
+            List<ProductProjection2> projection2List = monthlyPriceRepository.getAllProductByMonthPrice(productId);
+            return new ApiResult(projection2List, true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in get Product");
         }
     }
 }

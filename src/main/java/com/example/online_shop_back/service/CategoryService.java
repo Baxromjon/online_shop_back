@@ -73,4 +73,15 @@ public class CategoryService {
             return new ApiResult(false, "Error in get all Categories");
         }
     }
+
+    public ApiResult delete(UUID categoryId) {
+        try {
+//            categoryRepository.deleteById(categoryId);
+            categoryRepository.deleteByCategoryId(categoryId);
+            return new ApiResult(true, "Successfully deleted");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in delete Category");
+        }
+    }
 }

@@ -34,4 +34,10 @@ public class MonthlyPriceController {
         ApiResult all = monthService.getAll();
         return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
     }
+
+    @GetMapping("/get_all_product_by_monthly_price/{productId}")
+    public HttpEntity<?> getAllProduct(@PathVariable UUID productId) {
+        ApiResult result = monthService.getAllProductByMonthlyPrice(productId);
+        return ResponseEntity.status(result.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(result);
+    }
 }
