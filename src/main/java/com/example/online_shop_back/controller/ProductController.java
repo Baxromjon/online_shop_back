@@ -67,5 +67,9 @@ public class ProductController {
         return ResponseEntity.status(apiResult.getSuccess() ? HttpStatus.CREATED : HttpStatus.CONFLICT).body(apiResult);
     }
 
-
+    @DeleteMapping("/delete_product/{id}")
+    public HttpEntity<?> delete(@PathVariable UUID id) {
+        ApiResult delete = productService.delete(id);
+        return ResponseEntity.status(delete.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(delete);
+    }
 }

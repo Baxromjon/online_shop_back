@@ -197,4 +197,14 @@ public class ProductService {
             return new ApiResult(false, "Error");
         }
     }
+
+    public ApiResult delete(UUID id) {
+        try {
+            productRepository.deleteById(id);
+            return new ApiResult(true, "Successfully deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in delete Product");
+        }
+    }
 }
