@@ -36,4 +36,10 @@ public class MeasurementController {
         return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
     }
 
+    @DeleteMapping("/delete/{id}")
+    public HttpEntity<?> delete(@PathVariable UUID id) {
+        ApiResult delete = measurementService.delete(id);
+        return ResponseEntity.status(delete.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(delete);
+    }
+
 }

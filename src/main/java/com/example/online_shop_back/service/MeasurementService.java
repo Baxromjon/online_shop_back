@@ -42,9 +42,19 @@ public class MeasurementService {
         try {
             List<Measurement> all = measurementRepository.findAll();
             return new ApiResult(all, true);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return new ApiResult(false, "Error in get all Measurement");
+        }
+    }
+
+    public ApiResult delete(UUID id) {
+        try {
+            measurementRepository.deleteById(id);
+            return new ApiResult(true, "Successfully deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ApiResult(false, "Error in delete measurement");
         }
     }
 }
