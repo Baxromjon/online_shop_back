@@ -56,4 +56,14 @@ public class MonthService {
             return new ApiResult(false, "Error in get all Months");
         }
     }
+
+    public ApiResult delete(UUID id) {
+        try {
+            monthRepository.deleteById(id);
+            return new ApiResult(true, "Successfully deleted");
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ApiResult(false, "Error in delete month");
+        }
+    }
 }

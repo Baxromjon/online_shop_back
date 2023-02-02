@@ -35,4 +35,11 @@ public class MonthController {
         ApiResult all = monthService.getAll();
         return ResponseEntity.status(all.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(all);
     }
+
+    @DeleteMapping("/delete_month/{id}")
+    public HttpEntity<?> delete(@PathVariable UUID id) {
+        ApiResult delete = monthService.delete(id);
+        return ResponseEntity.status(delete.getSuccess() ? HttpStatus.OK : HttpStatus.CONFLICT).body(delete);
+    }
+
 }
