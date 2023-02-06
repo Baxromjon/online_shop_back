@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class OnlineShopBackApplication {
 
-    @GetMapping("/message")
-    public String message(){
-        return "Congrats! Successfully deployed";
-    }
+//    @GetMapping("/message")
+//    public String message(){
+//        return "Congrats! Successfully deployed";
+//    }
     public static void main(String[] args) {
         SpringApplication.run(OnlineShopBackApplication.class, args);
     }
